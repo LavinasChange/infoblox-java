@@ -1077,7 +1077,7 @@ public abstract class InfobloxClient {
         .dnsView("default")
         .ttl(5)
         .tlsVerify(true)
-        .timeout(10)
+        .timeout(30)
         .debug(false);
   }
 
