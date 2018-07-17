@@ -6,7 +6,12 @@ com.oneops.infoblox.model.aaaa
 com.oneops.infoblox.model.cname
 com.oneops.infoblox.model.host
 com.oneops.infoblox.model.mx
+com.oneops.infoblox.model.ns
+com.oneops.infoblox.model.ptr
 com.oneops.infoblox.model.ref
+com.oneops.infoblox.model.srv
+com.oneops.infoblox.model.ttl
+com.oneops.infoblox.model.txt
 com.oneops.infoblox.model.zone
 com.oneops.infoblox.tls
 com.oneops.infoblox.util
