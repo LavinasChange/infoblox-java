@@ -8,6 +8,11 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### Added
 
 
+## [1.2.1] - 2018-07-17
+### Added
+- `TTL` support.
+- Added support for many new DNS record types.
+
 ## [1.1.0] - 2018-04-17
 ### Added
 - Disabled SNI TLS extension.
@@ -42,9 +47,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### Added
 - Infoblox java api initial release.
 
-
-[Unreleased]: https://github.com/oneops/infoblox-java/compare/release-1.1.0...HEAD
-[1.1.0]: https://github.com/oneops/infoblox-java/compare/release-1.0.1...release-1.1.0
-[1.0.1]: https://github.com/oneops/infoblox-java/compare/release-1.0.0...release-1.0.1
-[1.0.0]: https://github.com/oneops/infoblox-java/compare/release-0.0.1...release-1.0.0
-[0.0.1]: https://github.com/oneops/infoblox-java/compare/release-0.0.1...release-0.0.1
+[Unreleased]: https://gecgithub01.walmart.com/oneops/infoblox-java/compare/release-1.2.1...HEAD
+[1.2.1]: https://gecgithub01.walmart.com/oneops/infoblox-java/compare/release-1.1.0...release-1.2.1
+[1.1.0]: https://gecgithub01.walmart.com/oneops/infoblox-java/compare/release-1.0.1...release-1.1.0
+[1.0.1]: https://gecgithub01.walmart.com/oneops/infoblox-java/compare/release-1.0.0...release-1.0.1
+[1.0.0]: https://gecgithub01.walmart.com/oneops/infoblox-java/compare/release-0.0.1...release-1.0.0
+[0.0.1]: https://gecgithub01.walmart.com/oneops/infoblox-java/compare/release-0.0.1...release-0.0.1
