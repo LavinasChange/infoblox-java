@@ -112,7 +112,7 @@ License
 
 <!-- Badges -->
 
-[1]: https://repository.walmart.com/nexus/service/local/artifact/maven/redirect?g=com.oneopsp&a=infoblox-java&v=LATEST&e=jar&r=pangaea_releases&c=
+[1]: https://repository.walmart.com/nexus/service/local/artifact/maven/redirect?g=com.oneops&a=infoblox-java&v=LATEST&e=jar&r=pangaea_releases&c=
 [2]: https://gecgithub01.walmart.com/pages/oneops/infoblox-java/javadocs/com/oneops/infoblox/InfobloxClient.Builder.html#trustStore-java.lang.String-
 [3]: https://gecgithub01.walmart.com/pages/oneops/infoblox-java/javadocs/com/oneops/infoblox/InfobloxClient.Builder.html#trustStorePassword-java.lang.String-
 [4]: https://en.wikipedia.org/wiki/PKCS_12
