@@ -1,6 +1,6 @@
 <img src="docs/images/dns-icon.png" alt="Infoblox" width=25 height=25> Infoblox Java Client
 ----------
-[![Maven Central][maven-svg]][maven-url] [![changelog][cl-svg]][cl-url] [![javadoc][javadoc-svg]][javadoc-url]  
+[![Build Status](https://ci.walmart.com/buildStatus/icon?job=Pangea_Platform/OneOps/infoblox-java)](https://ci.walmart.com/job/Pangea_Platform/job/OneOps/job/infoblox-java/) [![changelog][cl-svg]][cl-url] [![javadoc][javadoc-svg]][javadoc-url]  
 
 A pure java API for Infoblox DNS appliance.
 
@@ -25,6 +25,7 @@ InfobloxClient client = InfobloxClient.builder()
             .endPoint("Infoblox Host")
             .userName("Infoblox User")
             .password("Infoblox Password")
+            .ttl(5)
             .tlsVerify(false)
             .build();
 ```
@@ -72,7 +73,7 @@ List<CNAME> modCName = client.modifyCNameRec(alias, newAlias);
 List<String> delCName = client.deleteCNameRec(alias);
 ```
 
-Refer [JavaDocs][javadoc-url] for all record types (**MX, PTR, SRV, TXT** etc) APIs
+Refer [JavaDocs][javadoc-url] for all record types (**MX, PTR, SRV, TXT, NS, Zone** etc) APIs
 
 ## Testing
 
@@ -87,13 +88,10 @@ export iba_domain=<Infoblox Zone>
 
 ## Dependencies
 
-   - [Retrofit](https://github.com/square/retrofit/)
-   - [OkHttp](https://github.com/square/okhttp)
-   - [Moshi](https://github.com/square/Moshi/)
+ - [Retrofit](https://github.com/square/retrofit/)
+ - [OkHttp](https://github.com/square/okhttp)
+ - [Moshi](https://github.com/square/Moshi/)
 
-## ToDo
-
-   - Add support for `SRV`, `TXT`, `PTR`, `DNAME` records etc.
       
 License
 -------
@@ -114,20 +112,16 @@ License
 
 <!-- Badges -->
 
-[1]: https://search.maven.org/remote_content?g=com.oneops&a=infoblox-java&v=LATEST
-[2]: http://oneops.com/infoblox-java/javadocs/com/oneops/infoblox/InfobloxClient.Builder.html#trustStore-java.lang.String-
-[3]: http://oneops.com/infoblox-java/javadocs/com/oneops/infoblox/InfobloxClient.Builder.html#trustStorePassword-java.lang.String-
+[1]: https://repository.walmart.com/nexus/service/local/artifact/maven/redirect?g=com.oneopsp&a=infoblox-java&v=LATEST&e=jar&r=pangaea_releases&c=
+[2]: https://gecgithub01.walmart.com/pages/oneops/infoblox-java/javadocs/com/oneops/infoblox/InfobloxClient.Builder.html#trustStore-java.lang.String-
+[3]: https://gecgithub01.walmart.com/pages/oneops/infoblox-java/javadocs/com/oneops/infoblox/InfobloxClient.Builder.html#trustStorePassword-java.lang.String-
 [4]: https://en.wikipedia.org/wiki/PKCS_12
-[5]: http://oneops.com/infoblox-java/javadocs/com/oneops/infoblox/InfobloxClient.Builder.html#debug-boolean-
-[6]: http://oneops.com/infoblox-java/javadocs/com/oneops/infoblox/InfobloxClient.Builder.html
+[5]: https://gecgithub01.walmart.com/pages/oneops/infoblox-java/javadocs/com/oneops/infoblox/InfobloxClient.Builder.html#debug-boolean-
+[6]: https://gecgithub01.walmart.com/pages/oneops/infoblox-java/javadocs/com/oneops/infoblox/InfobloxClient.Builder.html
 
-
-[maven-url]: http://search.maven.org/#search%7Cgav%7C1%7Cg%3A%22com.oneops%22%20AND%20a%3A%22infoblox-java%22
-[maven-svg]: https://img.shields.io/maven-central/v/com.oneops/infoblox-java.svg?label=Maven%20Central&style=flat-square
-
-[cl-url]: https://github.com/oneops/infoblox-java/blob/master/CHANGELOG.md
+[cl-url]: https://gecgithub01.walmart.com/oneops/infoblox-java/blob/master/CHANGELOG.md
 [cl-svg]: https://img.shields.io/badge/change--log-latest-green.svg?style=flat-square
 
-[javadoc-url]: https://oneops.github.io/infoblox-java/javadocs/
+[javadoc-url]: https://gecgithub01.walmart.com/pages/oneops/infoblox-java/javadocs/
 [javadoc-svg]: https://img.shields.io/badge/api--doc-latest-cyan.svg?style=flat-square
 
