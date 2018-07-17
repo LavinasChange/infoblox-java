@@ -1,6 +1,5 @@
 package com.oneops.infoblox;
 
-import static com.oneops.infoblox.IBAEnvConfig.isValid;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assumptions.assumeTrue;
 
@@ -18,7 +17,8 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 /**
- * Tests for GSLB migration flow.
+ * Tests for GSLB migration flow. This test is disabled by default. Make sure to set
+ * <b>idc_iba_user</b> and <b>idc_iba_pass</b> env variables before running this test.
  *
  * @author Suresh G
  */
@@ -28,22 +28,26 @@ class MigrationTest {
 
   private static InfobloxClient client;
 
-  private final String domain = "oneopstest.walmart.net";
+  private final String domain = "glb.prod.walmart.com";
 
   /** Torbit GSLB domain */
   private final String canonicalName = "testrecord.glb.us.walmart.net";
 
   /** Netscalar GSLB domain */
-  private final String aliasName = "testrecord.glb.oneopstest.walmart.net";
+  private final String aliasName = "testrecord.glb.prod.walmart.com";
 
   @BeforeAll
   static void setUp() {
-    assumeTrue(isValid(), IBAEnvConfig::errMsg);
+    String idcIbaUser = System.getenv("idc_iba_user");
+    String idcIbaPass = System.getenv("idc_iba_pass");
+    assumeTrue(idcIbaUser != null && idcIbaPass != null, "Invalid IDC infoblox credentials!");
+
     client =
         InfobloxClient.builder()
-            .endPoint(IBAEnvConfig.host())
-            .userName(IBAEnvConfig.user())
-            .password(IBAEnvConfig.password())
+            .endPoint("https://infoblox-api.wal-mart.com")
+            .userName(idcIbaUser)
+            .password(idcIbaPass)
+            .timeout(300)
             .ttl(5)
             .tlsVerify(false)
             .debug(true)
