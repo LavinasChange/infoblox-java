@@ -34,7 +34,7 @@ public interface Infoblox {
   /**
    * By default, all the fields are not returned during a GET request. You can use the
    * <b>_return_fields</b> argument to get the desired data. You would have to explicitly mention
-   * the additional fields you require with a <b>_return_fields+={requiredfield}></b>. The following
+   * the additional fields you require with a <b>_return_fields+={requiredfield}</b>. The following
    * variables describe the fields for each record type. <b>view</b> and <b>ttl</b> fields are
    * included by default as it's part of the base {@link com.oneops.infoblox.model.Record} object.
    *
