@@ -51,7 +51,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Infoblox java api initial release.
 
 [Unreleased]: https://gecgithub01.walmart.com/oneops/infoblox-java/compare/infoblox-java-1.2.2...HEAD
-[1.2.2]: https://gecgithub01.walmart.com/oneops/infoblox-java/compare/release-1.2.1...infoblox-java-1.2.2
+[1.2.2]: https://gecgithub01.walmart.com/oneops/infoblox-java/compare/infoblox-java-1.2.1...infoblox-java-1.2.2
 [1.2.1]: https://gecgithub01.walmart.com/oneops/infoblox-java/compare/release-1.1.0...infoblox-java-1.2.1
 [1.1.0]: https://gecgithub01.walmart.com/oneops/infoblox-java/compare/release-1.0.1...release-1.1.0
 [1.0.1]: https://gecgithub01.walmart.com/oneops/infoblox-java/compare/release-1.0.0...release-1.0.1
