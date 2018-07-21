@@ -44,6 +44,7 @@ class CNAMETest {
   void create(String prefix) throws IOException {
 
     final String canonicalName = String.format("%s.%s", prefix, domain());
+    final String newCanonicalName = String.format("%s-mod.%s", prefix, domain());
     final String alias = String.format("%s-cname1.%s", prefix, domain());
     final String newAlias = String.format("%s-cname1-mod.%s", prefix, domain());
 
@@ -65,6 +66,12 @@ class CNAMETest {
     // Modify CNAME Record
     List<CNAME> modCName = client.modifyCNameRec(alias, newAlias);
     assertEquals(1, modCName.size());
+
+    // Modify canonical record
+    List<CNAME> modCName1 = client.modifyCNameCanonicalRec(newAlias, newCanonicalName);
+    assertEquals(1, modCName1.size());
+    assertEquals(newAlias, modCName1.get(0).name());
+    assertEquals(newCanonicalName, modCName1.get(0).canonical());
 
     // Delete CNAME Record
     List<String> delCName = client.deleteCNameRec(alias);

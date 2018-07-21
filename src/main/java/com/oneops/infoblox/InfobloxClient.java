@@ -830,6 +830,30 @@ public abstract class InfobloxClient {
         .collect(Collectors.toList());
   }
 
+  /**
+   * Modify canonical name of the CNAME record with new name.
+   *
+   * @param aliasName alias name.
+   * @param newCanonicalName new canonical name.
+   * @throws IOException if a problem occurred talking to the infoblox.
+   */
+  public List<CNAME> modifyCNameCanonicalRec(String aliasName, String newCanonicalName)
+      throws IOException {
+    return getCNameRec(aliasName)
+        .stream()
+        .map(
+            rec -> {
+              Map<String, String> req = new HashMap<>(1);
+              req.put("canonical", newCanonicalName);
+              try {
+                return exec(infoblox.modifyCNAMERec(rec.ref().value(), req)).result();
+              } catch (IOException ioe) {
+                throw new IllegalStateException("Error modifying CNAME record: " + rec, ioe);
+              }
+            })
+        .collect(Collectors.toList());
+  }
+
   // --------<MX Record>--------
   /**
    * Get mail exchange (MX) record for the given domain name and search option.
