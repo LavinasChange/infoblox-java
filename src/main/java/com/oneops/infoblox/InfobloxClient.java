@@ -12,6 +12,7 @@ import com.oneops.infoblox.model.Error;
 import com.oneops.infoblox.model.JsonAdapterFactory;
 import com.oneops.infoblox.model.Record;
 import com.oneops.infoblox.model.Redacted;
+import com.oneops.infoblox.model.Result;
 import com.oneops.infoblox.model.SearchModifier;
 import com.oneops.infoblox.model.a.ARec;
 import com.oneops.infoblox.model.aaaa.AAAA;
@@ -38,6 +39,7 @@ import java.security.GeneralSecurityException;
 import java.security.KeyStore;
 import java.security.SecureRandom;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -355,13 +357,29 @@ public abstract class InfobloxClient {
 
   // --------<Delegated Zone Record>--------
   /**
-   * Fetch all delegated zones.
+   * Fetch all delegated zones by querying pageSize max results at a time.
    *
+   * @param pageSize max results to query at a time.
    * @return list of {@link ZoneDelegate}
    * @throws IOException if a problem occurred talking to the infoblox.
    */
-  public List<ZoneDelegate> getDelegatedZones() throws IOException {
-    return exec(infoblox.queryDelegatedZones()).result();
+  public List<ZoneDelegate> getDelegatedZones(int pageSize) throws IOException {
+    Map<String, Object> req = new HashMap<>(2);
+    req.put("_paging", 1);
+    req.put("_max_results", pageSize);
+
+    Result<List<ZoneDelegate>> res = exec(infoblox.queryDelegatedZone(req));
+    String nextPageId = res.nextPageId();
+    List<ZoneDelegate> delegZones = new LinkedList<>(res.result());
+
+    while (nextPageId != null) {
+      log.info("Querying next page id: " + nextPageId);
+      req.put("_page_id", nextPageId);
+      res = exec(infoblox.queryDelegatedZone(req));
+      nextPageId = res.nextPageId();
+      delegZones.addAll(res.result());
+    }
+    return delegZones;
   }
 
   /**
@@ -375,7 +393,7 @@ public abstract class InfobloxClient {
   public List<ZoneDelegate> getDelegatedZones(String domainName, SearchModifier modifier)
       throws IOException {
     requireNonNull(domainName, "Domain name is null");
-    Map<String, String> options = new HashMap<>(1);
+    Map<String, Object> options = new HashMap<>(1);
     options.put("fqdn" + modifier.getValue(), domainName);
     return exec(infoblox.queryDelegatedZone(options)).result();
   }

@@ -36,6 +36,7 @@ class ZoneTest {
             .userName(IBAEnvConfig.user())
             .password(IBAEnvConfig.password())
             .ttl(1)
+            .timeout(0)
             .tlsVerify(false)
             .debug(true)
             .build();
@@ -55,7 +56,7 @@ class ZoneTest {
 
   @Test
   void delegatedZones() throws IOException {
-    List<ZoneDelegate> delegates = client.getDelegatedZones();
+    List<ZoneDelegate> delegates = client.getDelegatedZones(10);
     assertTrue(delegates.size() > 0);
 
     String glbDomain = String.format("glb.%s", zoneName);

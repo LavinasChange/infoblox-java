@@ -12,7 +12,7 @@ Download [the latest JAR][1] or grab via Maven:
 <dependency>
    <groupId>com.oneops</groupId>
    <artifactId>infoblox-java</artifactId>
-   <version>1.2.2</version>
+   <version>1.2.3</version>
 </dependency>
 ```
 > To see all versions, go [here][0]

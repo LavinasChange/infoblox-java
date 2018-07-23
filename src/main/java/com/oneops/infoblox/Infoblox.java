@@ -73,11 +73,8 @@ public interface Infoblox {
 
   /** Zone delegation */
   @GET("zone_delegated?" + ZONE_DELEGATE_FIELDS)
-  Call<Result<List<ZoneDelegate>>> queryDelegatedZones();
-
-  @GET("zone_delegated?" + ZONE_DELEGATE_FIELDS)
   Call<Result<List<ZoneDelegate>>> queryDelegatedZone(
-      @QueryMap(encoded = true) Map<String, String> options);
+      @QueryMap(encoded = true) Map<String, Object> options);
 
   @POST("zone_delegated?" + ZONE_DELEGATE_FIELDS)
   Call<Result<ZoneDelegate>> createDelegatedZone(@Body Map<String, Object> req);

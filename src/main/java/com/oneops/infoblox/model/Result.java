@@ -1,9 +1,11 @@
 package com.oneops.infoblox.model;
 
 import com.google.auto.value.AutoValue;
+import com.squareup.moshi.Json;
 import com.squareup.moshi.JsonAdapter;
 import com.squareup.moshi.Moshi;
 import java.lang.reflect.Type;
+import javax.annotation.Nullable;
 
 /**
  * Holds a result type containing one or more JSON objects.
@@ -15,8 +17,22 @@ public abstract class Result<T> {
 
   public abstract T result();
 
-  public static <T> Result<T> create(T result) {
-    return new AutoValue_Result<>(result);
+  @Json(name = "next_page_id")
+  @Nullable
+  public abstract String nextPageId();
+
+  public static <T> Builder<T> builder() {
+    return new AutoValue_Result.Builder<T>();
+  }
+
+  @AutoValue.Builder
+  public abstract static class Builder<T> {
+
+    public abstract Builder<T> result(T result);
+
+    public abstract Builder<T> nextPageId(String nextPageId);
+
+    public abstract Result<T> build();
   }
 
   /** Json adapter for {@link Result} type, used by Moshi for JSON [de]serialization. */
