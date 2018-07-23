@@ -27,6 +27,8 @@ class PTRTest {
 
   private final String fqdn = "oneops-test-ptr1." + domain();
 
+  private final String modFqdn = "oneops-test-ptr1-mod." + domain();
+
   @BeforeAll
   static void setUp() {
     assumeTrue(isValid(), IBAEnvConfig::errMsg);
@@ -46,15 +48,16 @@ class PTRTest {
 
     // Clean any existing PTR records.
     client.deletePTRDRec(fqdn);
+    client.deletePTRDRec(modFqdn);
 
     List<PTR> rec = client.getPTRDRec(fqdn);
     assertTrue(rec.isEmpty());
 
     // Creates PTR Record
-    String ip = "10.11.12.13";
+    String ip = "10.1.1.1";
     String reverseMapName = PTR.reverseMapName(InetAddress.getByName(ip));
 
-    PTR ptrRec = client.createPTRRec(fqdn, ip);
+    PTR ptrRec = client.createPTRRec(ip, fqdn);
     assertEquals(fqdn, ptrRec.ptrdname());
     assertEquals(ip, ptrRec.ipv4addr());
     assertEquals(reverseMapName, ptrRec.name());
@@ -69,10 +72,22 @@ class PTRTest {
     assertEquals(ip, ptrdRec.get(0).ipv4addr());
     assertEquals(reverseMapName, ptrdRec.get(0).name());
 
+    // Update PTR domain
+    List<PTR> modPTR = client.modifyPTRRec(ip, modFqdn);
+    assertTrue(modPTR.size() > 0);
+    assertEquals(modFqdn, modPTR.get(0).ptrdname());
+    assertEquals(ip, modPTR.get(0).ipv4addr());
+    assertEquals(reverseMapName, modPTR.get(0).name());
+
     // Delete PTR record
     client.deletePTRDRec(fqdn);
+    client.deletePTRDRec(modFqdn);
+
     List<PTR> ptrdRec1 = client.getPTRDRec(fqdn);
     assertEquals(0, ptrdRec1.size());
+
+    List<PTR> ptrdRec2 = client.getPTRDRec(modFqdn);
+    assertEquals(0, ptrdRec2.size());
   }
 
   @Test

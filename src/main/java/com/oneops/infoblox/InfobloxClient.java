@@ -173,6 +173,7 @@ public abstract class InfobloxClient {
                       origUrl
                           .newBuilder()
                           .addQueryParameter("_return_as_object", "1")
+                          // .addQueryParameter("_paging", "1")
                           // .addQueryParameter("_max_results","1")
                           .build();
                   Request req =
@@ -1002,12 +1003,12 @@ public abstract class InfobloxClient {
   /**
    * Creates pointer (PTR) record for the IP address and domain name.
    *
-   * @param ptrdname pointer domain name
    * @param ipAddress IPv4/v6 address
+   * @param ptrdname pointer domain name
    * @return {@link PTR} record.
    * @throws IOException if a problem occurred talking to the infoblox.
    */
-  public PTR createPTRRec(String ptrdname, String ipAddress) throws IOException {
+  public PTR createPTRRec(String ipAddress, String ptrdname) throws IOException {
     requireNonNull(ptrdname, "Pointer domain name is null");
     requireNonNull(ipAddress, "IPAddress is null");
     String addrType = IPAddrs.isIPv4(ipAddress) ? "ipv4addr" : "ipv6addr";
@@ -1017,6 +1018,29 @@ public abstract class InfobloxClient {
     req.put("ptrdname", ptrdname);
     req.put(addrType, ipAddress);
     return exec(infoblox.createPTRRec(req)).result();
+  }
+
+  /**
+   * Modify the PTR domain name of the given IPv4/v6 address.
+   *
+   * @param ipAddress IPv4/v6 address
+   * @param newPtrdname new pointer domain name
+   * @throws IOException if a problem occurred talking to the infoblox.
+   */
+  public List<PTR> modifyPTRRec(String ipAddress, String newPtrdname) throws IOException {
+    return getPTRRec(ipAddress)
+        .stream()
+        .map(
+            rec -> {
+              Map<String, String> req = new HashMap<>(1);
+              req.put("ptrdname", newPtrdname);
+              try {
+                return exec(infoblox.modifyPTRRec(rec.ref().value(), req)).result();
+              } catch (IOException ioe) {
+                throw new IllegalStateException("Error modifying PTR record: " + rec, ioe);
+              }
+            })
+        .collect(Collectors.toList());
   }
 
   /**
