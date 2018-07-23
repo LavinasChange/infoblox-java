@@ -38,8 +38,8 @@ import java.nio.file.Paths;
 import java.security.GeneralSecurityException;
 import java.security.KeyStore;
 import java.security.SecureRandom;
+import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -370,7 +370,7 @@ public abstract class InfobloxClient {
 
     Result<List<ZoneDelegate>> res = exec(infoblox.queryDelegatedZone(req));
     String nextPageId = res.nextPageId();
-    List<ZoneDelegate> delegZones = new LinkedList<>(res.result());
+    List<ZoneDelegate> delegZones = new ArrayList<>(res.result());
 
     while (nextPageId != null) {
       log.info("Querying next page id: " + nextPageId);
