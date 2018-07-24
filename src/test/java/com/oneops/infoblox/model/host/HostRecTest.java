@@ -68,8 +68,11 @@ class HostRecTest {
         newHostRec.ipv4Addrs().stream().map(Ipv4Addrs::ipv4Addr).collect(Collectors.toList());
     assertEquals(ipv4Addrs, res);
 
-    client.deleteHostRec(fqdn);
     List<Host> hostRec1 = client.getHostRec(fqdn);
-    assertTrue(hostRec1.isEmpty());
+    assertEquals(1, hostRec1.size());
+
+    client.deleteHostRec(fqdn);
+    List<Host> hostRec2 = client.getHostRec(fqdn);
+    assertTrue(hostRec2.isEmpty());
   }
 }

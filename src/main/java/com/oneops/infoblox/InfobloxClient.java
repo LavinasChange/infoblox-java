@@ -1,5 +1,6 @@
 package com.oneops.infoblox;
 
+import static com.oneops.infoblox.model.SearchModifier.CASE_INSENSITIVE;
 import static com.oneops.infoblox.util.IPAddrs.requireIPv4;
 import static com.oneops.infoblox.util.IPAddrs.requireIPv6;
 import static java.util.Collections.singletonList;
@@ -329,22 +330,6 @@ public abstract class InfobloxClient {
   }
 
   /**
-   * Fetch all authoritative zones for the given domain name and search option.
-   *
-   * @param domainName fqdn.
-   * @param modifier {@link SearchModifier}
-   * @return list of {@link ZoneAuth}
-   * @throws IOException if a problem occurred talking to the infoblox.
-   */
-  public List<ZoneAuth> getAuthZones(String domainName, SearchModifier modifier)
-      throws IOException {
-    requireNonNull(domainName, "Domain name is null");
-    Map<String, String> options = new HashMap<>(1);
-    options.put("fqdn" + modifier.getValue(), domainName);
-    return exec(infoblox.queryAuthZone(options)).result();
-  }
-
-  /**
    * Search all authoritative zones for the given domain name.
    *
    * @param domainName fqdn.
@@ -352,7 +337,11 @@ public abstract class InfobloxClient {
    * @throws IOException if a problem occurred talking to the infoblox.
    */
   public List<ZoneAuth> getAuthZones(String domainName) throws IOException {
-    return getAuthZones(domainName, SearchModifier.NONE);
+    requireNonNull(domainName, "Domain name is null");
+
+    Map<String, String> options = new HashMap<>(1);
+    options.put("fqdn", domainName);
+    return exec(infoblox.queryAuthZone(options)).result();
   }
 
   // --------<Delegated Zone Record>--------
@@ -383,22 +372,6 @@ public abstract class InfobloxClient {
   }
 
   /**
-   * Fetch all delegated zones for the given domain name and search option.
-   *
-   * @param domainName fqdn.
-   * @param modifier {@link SearchModifier}
-   * @return list of {@link ZoneDelegate}
-   * @throws IOException if a problem occurred talking to the infoblox.
-   */
-  public List<ZoneDelegate> getDelegatedZones(String domainName, SearchModifier modifier)
-      throws IOException {
-    requireNonNull(domainName, "Domain name is null");
-    Map<String, Object> options = new HashMap<>(1);
-    options.put("fqdn" + modifier.getValue(), domainName);
-    return exec(infoblox.queryDelegatedZone(options)).result();
-  }
-
-  /**
    * Search all delegated zones for the given domain name.
    *
    * @param domainName fqdn.
@@ -406,7 +379,10 @@ public abstract class InfobloxClient {
    * @throws IOException if a problem occurred talking to the infoblox.
    */
   public List<ZoneDelegate> getDelegatedZones(String domainName) throws IOException {
-    return getDelegatedZones(domainName, SearchModifier.NONE);
+    requireNonNull(domainName, "Domain name is null");
+    Map<String, Object> options = new HashMap<>(1);
+    options.put("fqdn", domainName);
+    return exec(infoblox.queryDelegatedZone(options)).result();
   }
 
   /**
@@ -488,7 +464,7 @@ public abstract class InfobloxClient {
    * @throws IOException if a problem occurred talking to the infoblox.
    */
   public List<Host> getHostRec(String domainName) throws IOException {
-    return getHostRec(domainName, SearchModifier.NONE);
+    return getHostRec(domainName, CASE_INSENSITIVE);
   }
 
   /**
@@ -554,7 +530,7 @@ public abstract class InfobloxClient {
    * @throws IOException if a problem occurred talking to the infoblox.
    */
   public List<ARec> getARec(String domainName) throws IOException {
-    return getARec(domainName, SearchModifier.NONE);
+    return getARec(domainName, CASE_INSENSITIVE);
   }
 
   /**
@@ -567,8 +543,10 @@ public abstract class InfobloxClient {
   public List<ARec> getARec(String domainName, String ipv4Address) throws IOException {
     requireNonNull(domainName, "Domain name is null");
     requireIPv4(ipv4Address);
+
     Map<String, String> options = new HashMap<>(2);
-    options.put("name", domainName);
+    String searchModifier = CASE_INSENSITIVE.getValue();
+    options.put("name" + searchModifier, domainName);
     options.put("ipv4addr", ipv4Address);
     return exec(infoblox.queryARec(options)).result();
   }
@@ -659,7 +637,7 @@ public abstract class InfobloxClient {
    * @throws IOException if a problem occurred talking to the infoblox.
    */
   public List<AAAA> getAAAARec(String domainName) throws IOException {
-    return getAAAARec(domainName, SearchModifier.NONE);
+    return getAAAARec(domainName, CASE_INSENSITIVE);
   }
 
   /**
@@ -673,8 +651,9 @@ public abstract class InfobloxClient {
   public List<AAAA> getAAAARec(String domainName, String ipv6Address) throws IOException {
     requireNonNull(domainName, "Domain name is null");
     requireIPv6(ipv6Address);
-    Map<String, String> options = new HashMap<>(1);
-    options.put("name", domainName);
+    Map<String, String> options = new HashMap<>(2);
+    String searchModifier = CASE_INSENSITIVE.getValue();
+    options.put("name" + searchModifier, domainName);
     options.put("ipv6addr", ipv6Address);
     return exec(infoblox.queryAAAARec(options)).result();
   }
@@ -765,7 +744,7 @@ public abstract class InfobloxClient {
    * @throws IOException if a problem occurred talking to the infoblox.
    */
   public List<CNAME> getCNameRec(String aliasName) throws IOException {
-    return getCNameRec(aliasName, SearchModifier.NONE);
+    return getCNameRec(aliasName, CASE_INSENSITIVE);
   }
 
   /**
@@ -779,8 +758,10 @@ public abstract class InfobloxClient {
   public List<CNAME> getCNameRec(String aliasName, String canonicalName) throws IOException {
     requireNonNull(aliasName, "Alias name is null");
     requireNonNull(canonicalName, "Canonical name is null");
-    Map<String, String> options = new HashMap<>(1);
-    options.put("name", aliasName);
+
+    Map<String, String> options = new HashMap<>(2);
+    String searchModifier = CASE_INSENSITIVE.getValue();
+    options.put("name" + searchModifier, aliasName);
     options.put("canonical", canonicalName);
     return exec(infoblox.queryCNAMERec(options)).result();
   }
@@ -896,7 +877,7 @@ public abstract class InfobloxClient {
    * @throws IOException if a problem occurred talking to the infoblox.
    */
   public List<MX> getMXRec(String domainName) throws IOException {
-    return getMXRec(domainName, SearchModifier.NONE);
+    return getMXRec(domainName, CASE_INSENSITIVE);
   }
 
   /**
@@ -912,8 +893,10 @@ public abstract class InfobloxClient {
   public List<MX> getMXRec(String domainName, String mailExchanger) throws IOException {
     requireNonNull(domainName, "Domain name is null");
     requireNonNull(mailExchanger, "MailExchanger is null");
-    Map<String, String> options = new HashMap<>(1);
-    options.put("name", domainName);
+
+    Map<String, String> options = new HashMap<>(2);
+    String searchModifier = CASE_INSENSITIVE.getValue();
+    options.put("name" + searchModifier, domainName);
     options.put("mail_exchanger", mailExchanger);
     return exec(infoblox.queryMXRec(options)).result();
   }
@@ -1013,8 +996,10 @@ public abstract class InfobloxClient {
    */
   public List<PTR> getPTRDRec(String ptrdname) throws IOException {
     requireNonNull(ptrdname, "Pointer domain name is null");
+
     Map<String, String> options = new HashMap<>(1);
-    options.put("ptrdname", ptrdname);
+    String searchModifier = CASE_INSENSITIVE.getValue();
+    options.put("ptrdname" + searchModifier, ptrdname);
     return exec(infoblox.queryPTRRec(options)).result();
   }
 

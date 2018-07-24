@@ -12,6 +12,7 @@ import java.io.IOException;
 import java.util.List;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 
@@ -79,5 +80,38 @@ class CNAMETest {
 
     List<String> delNewCName = client.deleteCNameRec(newAlias);
     assertEquals(1, delNewCName.size());
+  }
+
+  @Test
+  @DisplayName("Testing case insensitive APIs for the cname.")
+  void caseInsensitiveTest() throws IOException {
+
+    final String alias = "oneops-test-cs-cname1." + domain();
+    final String canonicalName = "oneops-test-cs." + domain();
+
+    // Clean it.
+    client.deleteCNameRec(alias);
+
+    List<CNAME> rec = client.getCNameRec(alias);
+    assertTrue(rec.isEmpty());
+
+    // Creates CNAME Record
+    CNAME cname = client.createCNameRec(alias, canonicalName);
+    assertEquals(canonicalName, cname.canonical());
+
+    // Now search with uppercase
+    String upperCaseAlias = alias.toUpperCase();
+
+    List<CNAME> cNameRec = client.getCNameRec(upperCaseAlias);
+    assertEquals(1, cNameRec.size());
+    assertEquals(canonicalName, cNameRec.get(0).canonical());
+
+    // Delete CNAME Record with uppercase.
+    List<String> delCName = client.deleteCNameRec(upperCaseAlias);
+    assertEquals(1, delCName.size());
+
+    // Make sure the lower case is also deleted.
+    List<CNAME> cNameRec1 = client.getCNameRec(alias);
+    assertEquals(0, cNameRec1.size());
   }
 }

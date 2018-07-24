@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ## [Unreleased]
 ### Added
 
+## [1.2.4] - 2018-07-24
+### Changed
+- Made all search query case insensitive by default except for `AuthZone` & `ZoneDelegation`.
+
 ## [1.2.3] - 2018-07-23
 ### Added
 - Added pagination for querying zone delegation.
@@ -55,7 +59,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### Added
 - Infoblox java api initial release.
 
-[Unreleased]: https://gecgithub01.walmart.com/oneops/infoblox-java/compare/infoblox-java-1.2.3...HEAD
+[Unreleased]: https://gecgithub01.walmart.com/oneops/infoblox-java/compare/infoblox-java-1.2.4...HEAD
+[1.2.4]: https://gecgithub01.walmart.com/oneops/infoblox-java/compare/infoblox-java-1.2.3...infoblox-java-1.2.4
 [1.2.3]: https://gecgithub01.walmart.com/oneops/infoblox-java/compare/infoblox-java-1.2.2...infoblox-java-1.2.3
 [1.2.2]: https://gecgithub01.walmart.com/oneops/infoblox-java/compare/infoblox-java-1.2.1...infoblox-java-1.2.2
 [1.2.1]: https://gecgithub01.walmart.com/oneops/infoblox-java/compare/release-1.1.0...infoblox-java-1.2.1
