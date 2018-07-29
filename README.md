@@ -12,7 +12,7 @@ Download [the latest JAR][1] or grab via Maven:
 <dependency>
    <groupId>com.oneops</groupId>
    <artifactId>infoblox-java</artifactId>
-   <version>1.2.4</version>
+   <version>1.3.0</version>
 </dependency>
 ```
 > To see all versions, go [here][0]
@@ -81,11 +81,14 @@ Refer [JavaDocs][javadoc-url] for all record types (**MX, PTR, SRV, TXT, NS, Zon
 Set the following env variables and run `./mvnw clean test` to execute the unit tests.
 
 ```bash
-export iba_host=<Infoblox Hostname>
+export iba_host=infoblox-api.walmart.com
 export iba_user=<Infoblox Username>
 export iba_password=<Infoblox Password>
-export iba_domain=<Infoblox Zone>
+export iba_domain=prod.walmart.com
 ```
+> Note: `infoblox-api.walmart.com` may not be directly accessible from your test machine. 
+> As a workaround use SSH tunneling `ssh -v user@any-prod-server -L 8888:infoblox-api.walmart.com:443` 
+> and use that as `iba_host`.
 
 ## Dependencies
 

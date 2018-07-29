@@ -3,6 +3,7 @@ package com.oneops.infoblox.model.cname;
 import static com.oneops.infoblox.IBAEnvConfig.domain;
 import static com.oneops.infoblox.IBAEnvConfig.isValid;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assumptions.assumeTrue;
 
@@ -113,5 +114,43 @@ class CNAMETest {
     // Make sure the lower case is also deleted.
     List<CNAME> cNameRec1 = client.getCNameRec(alias);
     assertEquals(0, cNameRec1.size());
+  }
+
+  @Test
+  @DisplayName("Canonical name query tests.")
+  void canonicalNameTest() throws IOException {
+
+    final String alias1 = "oneops-test-cn-cname1." + domain();
+    final String alias2 = "oneops-test-cn-cname2." + domain();
+    final String canonicalName = "oneops-test-cn." + domain();
+
+    // Clean it.
+    client.deleteCNameRec(alias1);
+    client.deleteCNameRec(alias2);
+
+    List<CNAME> rec = client.getCNameCanonicalRec(canonicalName);
+    assertTrue(rec.isEmpty());
+
+    // Creates CNAME Records
+    CNAME cname1 = client.createCNameRec(alias1, canonicalName);
+    assertEquals(canonicalName, cname1.canonical());
+
+    CNAME cname2 = client.createCNameRec(alias2, canonicalName);
+    assertEquals(canonicalName, cname2.canonical());
+
+    // Do a reverse lookup again using canonical name.
+    List<CNAME> cRecs1 = client.getCNameCanonicalRec(canonicalName);
+    assertEquals(2, cRecs1.size());
+    assertTrue(cRecs1.contains(cname1));
+    assertTrue(cRecs1.contains(cname2));
+
+    String recRef1 = client.deleteRecord(cname1);
+    assertNotNull(recRef1);
+    String recRef2 = client.deleteRecord(cname2);
+    assertNotNull(recRef2);
+
+    // Do a reverse lookup again.
+    List<CNAME> cRecs2 = client.getCNameCanonicalRec(canonicalName);
+    assertEquals(0, cRecs2.size());
   }
 }

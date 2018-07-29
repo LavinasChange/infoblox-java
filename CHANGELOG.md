@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ## [Unreleased]
 ### Added
 
+## [1.3.0] - 2018-07-28
+### Added
+- Querying `CNAME` based on `canonical` name.
+- `TXT` record support.
+- More test cases.
+
 ## [1.2.4] - 2018-07-24
 ### Changed
 - Made all search query case insensitive by default except for `AuthZone` & `ZoneDelegation`.
@@ -59,7 +65,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### Added
 - Infoblox java api initial release.
 
-[Unreleased]: https://gecgithub01.walmart.com/oneops/infoblox-java/compare/infoblox-java-1.2.4...HEAD
+[Unreleased]: https://gecgithub01.walmart.com/oneops/infoblox-java/compare/infoblox-java-1.3.0...HEAD
+[1.3.0]: https://gecgithub01.walmart.com/oneops/infoblox-java/compare/infoblox-java-1.2.4...infoblox-java-1.3.0
 [1.2.4]: https://gecgithub01.walmart.com/oneops/infoblox-java/compare/infoblox-java-1.2.3...infoblox-java-1.2.4
 [1.2.3]: https://gecgithub01.walmart.com/oneops/infoblox-java/compare/infoblox-java-1.2.2...infoblox-java-1.2.3
 [1.2.2]: https://gecgithub01.walmart.com/oneops/infoblox-java/compare/infoblox-java-1.2.1...infoblox-java-1.2.2
