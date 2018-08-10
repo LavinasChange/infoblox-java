@@ -80,7 +80,7 @@ Refer [JavaDocs][javadoc-url] for all record types (**MX, PTR, SRV, TXT, NS, Zon
 
  For doing the release build, go to [build job][build-job] and click `Release Build`
  
- <img src="docs/images/release-build.gif">
+ <img src="docs/images/release-build.gif" width=333 height=307>
   
 
 ## Testing

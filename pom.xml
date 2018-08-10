@@ -213,6 +213,10 @@
       </plugin>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-site-plugin</artifactId>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-surefire-plugin</artifactId>
       </plugin>
       <plugin>
@@ -384,6 +388,13 @@
           <configuration>
             <localCheckout>true</localCheckout> <!-- must be true -->
           </configuration>
+        </plugin>
+
+        <!-- Site plugin -->
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-site-plugin</artifactId>
+          <version>3.7.1</version>
         </plugin>
       </plugins>
     </pluginManagement>
