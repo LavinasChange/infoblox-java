@@ -50,6 +50,7 @@ class ARecordTest {
   }
 
   @Test
+  @DisplayName("A record crud tests.")
   void create() throws Exception {
     List<ARec> rec = client.getARec(fqdn);
     assertTrue(rec.isEmpty());
@@ -74,5 +75,37 @@ class ARecordTest {
 
     List<String> delNewARec = client.deleteARec(newFqdn);
     assertEquals(1, delNewARec.size());
+  }
+
+  @Test
+  @DisplayName("A record modify tests.")
+  void modifyTest() throws Exception {
+    List<ARec> rec = client.getARec(fqdn);
+    assertTrue(rec.isEmpty());
+
+    String ip = "10.11.12.13";
+    String newIP = "10.10.12.13";
+
+    // Creates A Record
+    ARec aRec = client.createARec(fqdn, ip);
+    assertEquals(ip, aRec.ipv4Addr());
+
+    // Get A record by IP
+    List<ARec> aRecs = client.getARecByIP(ip);
+    assertTrue(aRecs.size() > 0);
+    assertTrue(aRecs.contains(aRec));
+
+    // Modify the A record IP to new one.
+    List<ARec> aRecs1 = client.modifyARec(fqdn, ip, newIP);
+    assertEquals(1, aRecs1.size());
+    assertEquals(newIP, aRecs1.get(0).ipv4Addr());
+
+    // Now old IP shouldn't exists.
+    List<ARec> aRecs2 = client.getARec(fqdn, ip);
+    assertEquals(0, aRecs2.size());
+
+    // Cleanup A Records
+    List<String> delARec = client.deleteARec(fqdn);
+    assertEquals(1, delARec.size());
   }
 }

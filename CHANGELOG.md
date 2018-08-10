@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ## [Unreleased]
 ### Added
 
+## [1.3.1] - 2018-08-09
+### Added
+- New API to query/delete/modify A and AAAA records based on IPv4/v6.
+- More test cases.
+
 ## [1.3.0] - 2018-07-28
 ### Added
 - Querying `CNAME` based on `canonical` name.
@@ -65,7 +70,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### Added
 - Infoblox java api initial release.
 
-[Unreleased]: https://gecgithub01.walmart.com/oneops/infoblox-java/compare/infoblox-java-1.3.0...HEAD
+[Unreleased]: https://gecgithub01.walmart.com/oneops/infoblox-java/compare/infoblox-java-1.3.1...HEAD
+[1.3.1]: https://gecgithub01.walmart.com/oneops/infoblox-java/compare/infoblox-java-1.3.0...infoblox-java-1.3.1
 [1.3.0]: https://gecgithub01.walmart.com/oneops/infoblox-java/compare/infoblox-java-1.2.4...infoblox-java-1.3.0
 [1.2.4]: https://gecgithub01.walmart.com/oneops/infoblox-java/compare/infoblox-java-1.2.3...infoblox-java-1.2.4
 [1.2.3]: https://gecgithub01.walmart.com/oneops/infoblox-java/compare/infoblox-java-1.2.2...infoblox-java-1.2.3

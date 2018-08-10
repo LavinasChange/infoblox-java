@@ -1,6 +1,6 @@
 <img src="docs/images/dns-icon.png" alt="Infoblox" width=25 height=25> Infoblox Java Client
 ----------
-[![Build Status](https://ci.walmart.com/buildStatus/icon?job=Pangea_Platform/OneOps/infoblox-java)](https://ci.walmart.com/job/Pangea_Platform/job/OneOps/job/infoblox-java/) [![changelog][cl-svg]][cl-url] [![javadoc][javadoc-svg]][javadoc-url]  
+[![Build Status](https://ci.walmart.com/buildStatus/icon?job=Pangea_Platform/OneOps/infoblox-java)][build-job] [![changelog][cl-svg]][cl-url] [![javadoc][javadoc-svg]][javadoc-url]  
 
 A pure java API for Infoblox DNS appliance.
 
@@ -12,7 +12,7 @@ Download [the latest JAR][1] or grab via Maven:
 <dependency>
    <groupId>com.oneops</groupId>
    <artifactId>infoblox-java</artifactId>
-   <version>1.3.0</version>
+   <version>1.3.1</version>
 </dependency>
 ```
 > To see all versions, go [here][0]
@@ -26,7 +26,7 @@ InfobloxClient client = InfobloxClient.builder()
             .endPoint("Infoblox Host")
             .userName("Infoblox User")
             .password("Infoblox Password")
-            .ttl(5)
+            .ttl(60)
             .tlsVerify(false)
             .build();
 ```
@@ -76,19 +76,28 @@ List<String> delCName = client.deleteCNameRec(alias);
 
 Refer [JavaDocs][javadoc-url] for all record types (**MX, PTR, SRV, TXT, NS, Zone** etc) APIs
 
+## Building
+
+ For doing the release build, go to [build job][build-job] and click `Release Build`
+ 
+ <img src="docs/images/release-build.gif">
+  
+
 ## Testing
 
 Set the following env variables and run `./mvnw clean test` to execute the unit tests.
 
 ```bash
-export iba_host=infoblox-api.walmart.com
-export iba_user=<Infoblox Username>
-export iba_password=<Infoblox Password>
-export iba_domain=prod.walmart.com
+$ ssh -v user@any-prod-server -L 8888:infoblox-api.walmart.com:443
+$ export iba_host=localhost:8888
+  export iba_user=<Infoblox Username>
+  export iba_password=<Infoblox Password>
+  export iba_domain=prod.walmart.com
 ```
+
 > Note: `infoblox-api.walmart.com` may not be directly accessible from your test machine. 
 > As a workaround use SSH tunneling `ssh -v user@any-prod-server -L 8888:infoblox-api.walmart.com:443` 
-> and use that as `iba_host`.
+> and use `localhost` as `iba_host`.
 
 ## Dependencies
 
@@ -123,6 +132,8 @@ License
 [4]: https://en.wikipedia.org/wiki/PKCS_12
 [5]: https://gecgithub01.walmart.com/pages/oneops/infoblox-java/javadocs/com/oneops/infoblox/InfobloxClient.Builder.html#debug-boolean-
 [6]: https://gecgithub01.walmart.com/pages/oneops/infoblox-java/javadocs/com/oneops/infoblox/InfobloxClient.Builder.html
+
+[build-job]: https://ci.walmart.com/job/Pangea_Platform/job/OneOps/job/infoblox-java/
 
 [cl-url]: https://gecgithub01.walmart.com/oneops/infoblox-java/blob/master/CHANGELOG.md
 [cl-svg]: https://img.shields.io/badge/change--log-latest-green.svg?style=flat-square

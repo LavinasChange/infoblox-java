@@ -75,4 +75,36 @@ class AAAATest {
     List<String> delQuadA = client.deleteAAAARec(newFqdn);
     assertEquals(1, delQuadA.size());
   }
+
+  @Test
+  @DisplayName("QuadA record modify tests.")
+  void modifyTest() throws Exception {
+    List<AAAA> rec = client.getAAAARec(fqdn);
+    assertTrue(rec.isEmpty());
+
+    String ipv6 = "fe80:f0aa:f0bb:f0eb:f0ea:f6ff:fd97:5d51";
+    String newIPv6 = "fe81:f0aa:f1bb:f0eb:f0ea:f6ff:fd97:8d51";
+
+    // Creates AAAA Record
+    AAAA newQuadA = client.createAAAARec(fqdn, ipv6);
+    assertEquals(ipv6, newQuadA.ipv6Addr());
+
+    // Get quadA record by IP
+    List<AAAA> quadRecs = client.getAAAARecByIP(ipv6);
+    assertTrue(quadRecs.size() > 0);
+    assertTrue(quadRecs.contains(newQuadA));
+
+    // Modify the quadA record IPv6 to new one.
+    List<AAAA> quadRecs1 = client.modifyAAAARec(fqdn, ipv6, newIPv6);
+    assertEquals(1, quadRecs1.size());
+    assertEquals(newIPv6, quadRecs1.get(0).ipv6Addr());
+
+    // Now old IPv6 shouldn't exists.
+    List<AAAA> quadRecs2 = client.getAAAARec(fqdn, ipv6);
+    assertEquals(0, quadRecs2.size());
+
+    // Cleanup quadA Records
+    List<String> delquadARec = client.deleteAAAARec(fqdn);
+    assertEquals(1, delquadARec.size());
+  }
 }

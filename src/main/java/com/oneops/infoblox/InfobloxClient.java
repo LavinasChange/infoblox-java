@@ -520,9 +520,7 @@ public abstract class InfobloxClient {
    */
   public List<ARec> getARec(String domainName, SearchModifier modifier) throws IOException {
     requireNonNull(domainName, "Domain name is null");
-    Map<String, String> options = new HashMap<>(1);
-    options.put("name" + modifier.getValue(), domainName);
-    return exec(infoblox.queryARec(options)).result();
+    return getARec(domainName, null, modifier);
   }
 
   /**
@@ -537,20 +535,50 @@ public abstract class InfobloxClient {
   }
 
   /**
+   * Get address records (A Record) with given IPV4 address.
+   *
+   * @param ipv4Address IPv4 address
+   * @return list of matching {@link ARec}
+   * @throws IOException if a problem occurred talking to the infoblox.
+   */
+  public List<ARec> getARecByIP(String ipv4Address) throws IOException {
+    requireIPv4(ipv4Address);
+    return getARec(null, ipv4Address, CASE_INSENSITIVE);
+  }
+
+  /**
    * Get address record (A Record) for the given domain name and IPv4 address.
    *
    * @param domainName fqdn
    * @param ipv4Address IPv4 address
+   * @return list of matching {@link ARec}
    * @throws IOException if a problem occurred talking to the infoblox.
    */
   public List<ARec> getARec(String domainName, String ipv4Address) throws IOException {
     requireNonNull(domainName, "Domain name is null");
     requireIPv4(ipv4Address);
+    return getARec(domainName, ipv4Address, CASE_INSENSITIVE);
+  }
 
+  /**
+   * Query A record based on domain name, IPv4 address or both.
+   *
+   * @param domainName fqdn
+   * @param ipv4Address IPv4 address
+   * @param modifier search modifier
+   * @return list of matching {@link ARec}
+   * @throws IOException if a problem occurred talking to the infoblox.
+   */
+  private List<ARec> getARec(
+      @Nullable String domainName, @Nullable String ipv4Address, SearchModifier modifier)
+      throws IOException {
     Map<String, String> options = new HashMap<>(2);
-    String searchModifier = CASE_INSENSITIVE.getValue();
-    options.put("name" + searchModifier, domainName);
-    options.put("ipv4addr", ipv4Address);
+    if (domainName != null) {
+      options.put("name" + modifier.getValue(), domainName);
+    }
+    if (ipv4Address != null) {
+      options.put("ipv4addr", ipv4Address);
+    }
     return exec(infoblox.queryARec(options)).result();
   }
 
@@ -617,6 +645,31 @@ public abstract class InfobloxClient {
         .collect(Collectors.toList());
   }
 
+  /**
+   * Modify the IPv4 address of A record with given domain name.
+   *
+   * @param domainName fqdn for the A record.
+   * @param ipv4Address existing IPv4 address.
+   * @param newIPv4Address new IPv4 address.
+   * @throws IOException if a problem occurred talking to the infoblox.
+   */
+  public List<ARec> modifyARec(String domainName, String ipv4Address, String newIPv4Address)
+      throws IOException {
+    return getARec(domainName, ipv4Address)
+        .stream()
+        .map(
+            rec -> {
+              Map<String, String> req = new HashMap<>(1);
+              req.put("ipv4addr", newIPv4Address);
+              try {
+                return exec(infoblox.modifyARec(rec.ref().value(), req)).result();
+              } catch (IOException ioe) {
+                throw new IllegalStateException("Error modifying A record: " + rec, ioe);
+              }
+            })
+        .collect(Collectors.toList());
+  }
+
   // --------<AAAA Record>--------
   /**
    * Get IPv6 address records (AAAA) for the given domain name and search option.
@@ -627,9 +680,7 @@ public abstract class InfobloxClient {
    */
   public List<AAAA> getAAAARec(String domainName, SearchModifier modifier) throws IOException {
     requireNonNull(domainName, "Domain name is null");
-    Map<String, String> options = new HashMap<>(1);
-    options.put("name" + modifier.getValue(), domainName);
-    return exec(infoblox.queryAAAARec(options)).result();
+    return getAAAARec(domainName, null, modifier);
   }
 
   /**
@@ -654,10 +705,40 @@ public abstract class InfobloxClient {
   public List<AAAA> getAAAARec(String domainName, String ipv6Address) throws IOException {
     requireNonNull(domainName, "Domain name is null");
     requireIPv6(ipv6Address);
+    return getAAAARec(domainName, ipv6Address, CASE_INSENSITIVE);
+  }
+
+  /**
+   * Get quadA records with given IPv6 address.
+   *
+   * @param ipv6Address IPv6 address
+   * @return list of matching {@link AAAA}
+   * @throws IOException if a problem occurred talking to the infoblox.
+   */
+  public List<AAAA> getAAAARecByIP(String ipv6Address) throws IOException {
+    requireIPv6(ipv6Address);
+    return getAAAARec(null, ipv6Address, CASE_INSENSITIVE);
+  }
+
+  /**
+   * Query quadA record based on domain name, IPv6 address or both.
+   *
+   * @param domainName fqdn
+   * @param ipv6Address IPv6 address
+   * @param modifier search modifier
+   * @return list of matching {@link AAAA}
+   * @throws IOException if a problem occurred talking to the infoblox.
+   */
+  private List<AAAA> getAAAARec(
+      @Nullable String domainName, @Nullable String ipv6Address, SearchModifier modifier)
+      throws IOException {
     Map<String, String> options = new HashMap<>(2);
-    String searchModifier = CASE_INSENSITIVE.getValue();
-    options.put("name" + searchModifier, domainName);
-    options.put("ipv6addr", ipv6Address);
+    if (domainName != null) {
+      options.put("name" + modifier.getValue(), domainName);
+    }
+    if (ipv6Address != null) {
+      options.put("ipv6addr", ipv6Address);
+    }
     return exec(infoblox.queryAAAARec(options)).result();
   }
 
@@ -715,6 +796,31 @@ public abstract class InfobloxClient {
             rec -> {
               Map<String, String> req = new HashMap<>(1);
               req.put("name", newDomainName);
+              try {
+                return exec(infoblox.modifyAAAARec(rec.ref().value(), req)).result();
+              } catch (IOException ioe) {
+                throw new IllegalStateException("Error modifying AAAA record: " + rec, ioe);
+              }
+            })
+        .collect(Collectors.toList());
+  }
+
+  /**
+   * Modify the IPv6 address of AAAA record with given domain name.
+   *
+   * @param domainName fqdn for the AAAA record.
+   * @param ipv6Address existing IPv6 address.
+   * @param newIPv6Address new IPv6 address.
+   * @throws IOException if a problem occurred talking to the infoblox.
+   */
+  public List<AAAA> modifyAAAARec(String domainName, String ipv6Address, String newIPv6Address)
+      throws IOException {
+    return getAAAARec(domainName, ipv6Address)
+        .stream()
+        .map(
+            rec -> {
+              Map<String, String> req = new HashMap<>(1);
+              req.put("ipv6addr", newIPv6Address);
               try {
                 return exec(infoblox.modifyAAAARec(rec.ref().value(), req)).result();
               } catch (IOException ioe) {
@@ -1256,7 +1362,7 @@ public abstract class InfobloxClient {
     return new AutoValue_InfobloxClient.Builder()
         .wapiVersion("2.5")
         .dnsView("default")
-        .ttl(5)
+        .ttl(60)
         .tlsVerify(true)
         .timeout(30)
         .debug(false);
