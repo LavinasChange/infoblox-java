@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ## [Unreleased]
 ### Added
 
+## [1.3.2] - 2018-08-12
+### Fixed
+- Fixed slf4j binding compile-time dependency.
+
 ## [1.3.1] - 2018-08-09
 ### Added
 - New API to query/delete/modify A and AAAA records based on IPv4/v6.
@@ -70,7 +74,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### Added
 - Infoblox java api initial release.
 
-[Unreleased]: https://gecgithub01.walmart.com/oneops/infoblox-java/compare/infoblox-java-1.3.1...HEAD
+[Unreleased]: https://gecgithub01.walmart.com/oneops/infoblox-java/compare/infoblox-java-1.3.2...HEAD
+[1.3.2]: https://gecgithub01.walmart.com/oneops/infoblox-java/compare/infoblox-java-1.3.1...infoblox-java-1.3.2
 [1.3.1]: https://gecgithub01.walmart.com/oneops/infoblox-java/compare/infoblox-java-1.3.0...infoblox-java-1.3.1
 [1.3.0]: https://gecgithub01.walmart.com/oneops/infoblox-java/compare/infoblox-java-1.2.4...infoblox-java-1.3.0
 [1.2.4]: https://gecgithub01.walmart.com/oneops/infoblox-java/compare/infoblox-java-1.2.3...infoblox-java-1.2.4
