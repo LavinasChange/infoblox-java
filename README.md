@@ -12,7 +12,7 @@ Download [the latest JAR][1] or grab via Maven:
 <dependency>
    <groupId>com.oneops</groupId>
    <artifactId>infoblox-java</artifactId>
-   <version>1.3.2</version>
+   <version>1.3.3</version>
 </dependency>
 ```
 > To see all versions, go [here][0]
@@ -30,10 +30,30 @@ InfobloxClient client = InfobloxClient.builder()
             .tlsVerify(false)
             .build();
 ```
+<details>
+ <summary>Walmart Infoblox Provider</summary>
+
+   A new `InfobloxClientProvider` class has been provided to create 
+   `InfobloxClient` trasparently based on the `FQDN`. This will be make use of a `/secrets/infoblox-conf.json` config file to get all the infoblox endpoint configurations. To get a client (cached) for supported domain, 
+
+   ```java 
+   String fqdn = "test.us.walmart.net";
+   String ip = "10.11.12.13";
+
+   InfobloxClient client = InfobloxClientProvider.forDomain(fqdn);
+   ARec aRec = client.createARec(fqdn, ip);
+   ```
+</details><br/>
+
+<details open>
+ <summary>TLS config</summary>
+
   - For TLS verification, set the CA truststore using [trustStore()][2] & [trustStorePassword()][3] methods.
   - Truststore should be of type [PKCS#12][4] format. 
   - For loading the Truststore from classpath use, `classpath:/<your/truststore/path>.p12`
   - To enable http debugging for troubleshooting, set [.debug(true)][5] to the [InfobloxClient.builder()][6]
+</details><br/>
+  
 
 #### **A** Record
 
@@ -104,6 +124,7 @@ $ export iba_host=localhost:8888
  - [Retrofit](https://github.com/square/retrofit/)
  - [OkHttp](https://github.com/square/okhttp)
  - [Moshi](https://github.com/square/Moshi/)
+ - [Kotlin](https://kotlinlang.org/)
 
       
 License

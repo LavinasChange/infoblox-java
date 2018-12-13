@@ -14,30 +14,45 @@
   <url>https://gecgithub01.walmart.com/oneops/infoblox-java</url>
 
   <properties>
-    <autovalue.version>1.6.2</autovalue.version>
+    <kotlin.version>1.3.11</kotlin.version>
+    <autovalue.version>1.6.3</autovalue.version>
     <autovalue.redact.version>1.0.1</autovalue.redact.version>
     <autovalue.moshi.version>0.4.5</autovalue.moshi.version>
-    <okhttp.version>3.11.0</okhttp.version>
-    <moshi.version>1.6.0</moshi.version>
-    <retrofit.version>2.4.0</retrofit.version>
+    <okhttp.version>3.12.0</okhttp.version>
+    <moshi.version>1.8.0</moshi.version>
+    <retrofit.version>2.5.0</retrofit.version>
     <failsafe.version>1.1.0</failsafe.version>
     <slf4j.version>1.7.25</slf4j.version>
-    <mockito.version>2.8.9</mockito.version>
+    <mockito.version>2.23.4</mockito.version>
     <jsr305.version>3.0.2</jsr305.version>
-    <concurrentunit.version>0.4.3</concurrentunit.version>
     <dnsjava.version>2.1.8</dnsjava.version>
 
-    <errorprone.version>2.3.1</errorprone.version>
+    <errorprone.version>2.3.2</errorprone.version>
     <google-java-format.version>1.6</google-java-format.version>
     <jmh.version>1.21</jmh.version>
     <jsr305.version>3.0.2</jsr305.version>
-    <junit.jupiter.version>5.3.0</junit.jupiter.version>
+    <junit.jupiter.version>5.3.2</junit.jupiter.version>
+
+    <!-- plugin versions -->
+    <gitcommit.plugin.version>2.2.5</gitcommit.plugin.version>
+    <compiler.plugin.version>3.8.0</compiler.plugin.version>
+    <wagon.plugin.version>3.1.0</wagon.plugin.version>
+    <surefire.plugin.version>3.0.0-M2</surefire.plugin.version>
+    <errorprone.plugin.version>2.8.5</errorprone.plugin.version>
+    <shade.plugin.version>3.2.1</shade.plugin.version>
+    <execjar.plugin.version>1.5.0</execjar.plugin.version>
+    <exec.plugin.version>1.6.0</exec.plugin.version>
+    <gpg.plugin.version>1.6</gpg.plugin.version>
+    <buildhelper.plugin.version>3.0.0</buildhelper.plugin.version>
+    <conveofmt.plugin.version>2.6.0</conveofmt.plugin.version>
+    <versions.plugin.version>2.7</versions.plugin.version>
 
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-    <maven.compiler.source>1.8</maven.compiler.source>
-    <maven.compiler.target>1.8</maven.compiler.target>
-    <gitcommit.plugin.version>2.2.4</gitcommit.plugin.version>
+    <java.version>1.8</java.version>
+    <kotlin.compiler.jvmTarget>${java.version}</kotlin.compiler.jvmTarget>
+    <maven.compiler.source>${java.version}</maven.compiler.source>
+    <maven.compiler.target>${java.version}</maven.compiler.target>
     <maven.build.timestamp.format>yyyy-MM-dd hh:mm:ss a z</maven.build.timestamp.format>
   </properties>
 
@@ -48,23 +63,7 @@
     </license>
   </licenses>
 
-  <distributionManagement>
-    <repository>
-      <id>pangaea_releases</id>
-      <url>https://repository.walmart.com/content/repositories/pangaea_releases</url>
-      <uniqueVersion>true</uniqueVersion>
-    </repository>
-    <snapshotRepository>
-      <id>pangaea_snapshots</id>
-      <url>https://repository.walmart.com/content/repositories/pangaea_snapshots</url>
-      <uniqueVersion>false</uniqueVersion>
-    </snapshotRepository>
-    <site>
-      <id>mvn-site</id>
-      <url>dav:https://repository.walmart.com/content/sites/mvn-site/infoblox-java/</url>
-    </site>
-  </distributionManagement>
-
+  <inceptionYear>2018</inceptionYear>
   <scm>
     <connection>scm:git:https://gecgithub01.walmart.com/oneops/infoblox-java.git</connection>
     <developerConnection>scm:git:https://gecgithub01.walmart.com/oneops/infoblox-java.git
@@ -86,7 +85,29 @@
     </developer>
   </developers>
 
+  <distributionManagement>
+    <repository>
+      <id>pangaea_releases</id>
+      <url>https://repository.walmart.com/content/repositories/pangaea_releases</url>
+      <uniqueVersion>true</uniqueVersion>
+    </repository>
+    <snapshotRepository>
+      <id>pangaea_snapshots</id>
+      <url>https://repository.walmart.com/content/repositories/pangaea_snapshots</url>
+      <uniqueVersion>false</uniqueVersion>
+    </snapshotRepository>
+    <site>
+      <id>mvn-site</id>
+      <url>dav:https://repository.walmart.com/content/sites/mvn-site/infoblox-java/</url>
+    </site>
+  </distributionManagement>
+
   <dependencies>
+    <dependency>
+      <groupId>org.jetbrains.kotlin</groupId>
+      <artifactId>kotlin-stdlib-jdk8</artifactId>
+      <version>${kotlin.version}</version>
+    </dependency>
     <dependency>
       <groupId>com.squareup.retrofit2</groupId>
       <artifactId>retrofit</artifactId>
@@ -113,29 +134,16 @@
       <version>${okhttp.version}</version>
     </dependency>
 
-    <!-- Auto Value and extensions -->
+    <!-- Auto Value annotations -->
     <dependency>
       <groupId>com.google.auto.value</groupId>
       <artifactId>auto-value-annotations</artifactId>
       <version>${autovalue.version}</version>
     </dependency>
     <dependency>
-      <groupId>com.google.auto.value</groupId>
-      <artifactId>auto-value</artifactId>
-      <version>${autovalue.version}</version>
-      <scope>provided</scope>
-    </dependency>
-    <dependency>
       <groupId>com.ryanharter.auto.value</groupId>
-      <artifactId>auto-value-moshi</artifactId>
+      <artifactId>auto-value-moshi-annotations</artifactId>
       <version>${autovalue.moshi.version}</version>
-      <scope>provided</scope>
-    </dependency>
-    <dependency>
-      <groupId>com.squareup.auto.value</groupId>
-      <artifactId>auto-value-redacted</artifactId>
-      <version>${autovalue.redact.version}</version>
-      <scope>provided</scope>
     </dependency>
 
     <!-- Logging -->
@@ -196,18 +204,14 @@
       <version>${okhttp.version}</version>
       <scope>test</scope>
     </dependency>
-
-    <!-- For testing multi-threaded code-->
-    <dependency>
-      <groupId>net.jodah</groupId>
-      <artifactId>concurrentunit</artifactId>
-      <version>${concurrentunit.version}</version>
-      <scope>test</scope>
-    </dependency>
   </dependencies>
 
   <build>
     <plugins>
+      <plugin>
+        <groupId>org.jetbrains.kotlin</groupId>
+        <artifactId>kotlin-maven-plugin</artifactId>
+      </plugin>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-compiler-plugin</artifactId>
@@ -219,6 +223,10 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-release-plugin</artifactId>
+      </plugin>
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>versions-maven-plugin</artifactId>
       </plugin>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
@@ -236,51 +244,166 @@
         <groupId>com.coveo</groupId>
         <artifactId>fmt-maven-plugin</artifactId>
       </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-source-plugin</artifactId>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-javadoc-plugin</artifactId>
+      </plugin>
     </plugins>
 
     <extensions>
       <extension>
         <groupId>org.apache.maven.wagon</groupId>
         <artifactId>wagon-webdav-jackrabbit</artifactId>
-        <version>3.1.0</version>
+        <version>${wagon.plugin.version}</version>
       </extension>
     </extensions>
 
     <pluginManagement>
       <plugins>
+        <!-- Kotlin support-->
+        <plugin>
+          <artifactId>kotlin-maven-plugin</artifactId>
+          <groupId>org.jetbrains.kotlin</groupId>
+          <version>${kotlin.version}</version>
+          <executions>
+            <execution>
+              <id>kapt</id>
+              <goals>
+                <goal>kapt</goal>
+              </goals>
+              <configuration>
+                <sourceDirs>
+                  <sourceDir>src/main/kotlin</sourceDir>
+                  <sourceDir>src/main/java</sourceDir>
+                </sourceDirs>
+                <annotationProcessorPaths>
+                  <!-- Specify your annotation processors here. -->
+                  <annotationProcessorPath>
+                    <groupId>com.squareup.moshi</groupId>
+                    <artifactId>moshi-kotlin-codegen</artifactId>
+                    <version>${moshi.version}</version>
+                  </annotationProcessorPath>
+                  <annotationProcessorPath>
+                    <groupId>com.google.auto.value</groupId>
+                    <artifactId>auto-value</artifactId>
+                    <version>${autovalue.version}</version>
+                  </annotationProcessorPath>
+                  <annotationProcessorPath>
+                    <groupId>com.ryanharter.auto.value</groupId>
+                    <artifactId>auto-value-moshi</artifactId>
+                    <version>${autovalue.moshi.version}</version>
+                  </annotationProcessorPath>
+                  <annotationProcessorPath>
+                    <groupId>com.squareup.auto.value</groupId>
+                    <artifactId>auto-value-redacted</artifactId>
+                    <version>${autovalue.redact.version}</version>
+                  </annotationProcessorPath>
+                </annotationProcessorPaths>
+              </configuration>
+            </execution>
+
+            <execution>
+              <id>compile</id>
+              <goals>
+                <goal>compile</goal>
+              </goals>
+              <configuration>
+                <sourceDirs>
+                  <sourceDir>${project.basedir}/src/main/kotlin</sourceDir>
+                  <sourceDir>${project.basedir}/src/main/java</sourceDir>
+                </sourceDirs>
+              </configuration>
+            </execution>
+            <execution>
+              <id>test-compile</id>
+              <goals>
+                <goal>test-compile</goal>
+              </goals>
+              <configuration>
+                <sourceDirs>
+                  <sourceDir>${project.basedir}/src/test/kotlin</sourceDir>
+                  <sourceDir>${project.basedir}/src/test/java</sourceDir>
+                </sourceDirs>
+              </configuration>
+            </execution>
+          </executions>
+
+          <configuration>
+            <args>
+              <!-- Enable strict mode for JSR-305 annotations -->
+              <arg>-Xjsr305=strict</arg>
+            </args>
+          </configuration>
+        </plugin>
+
         <!-- Use Google's errorprone compiler for static analysis. -->
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-compiler-plugin</artifactId>
-          <version>3.7.0</version>
+          <version>${compiler.plugin.version}</version>
+
           <configuration>
             <compilerId>javac-with-errorprone</compilerId>
-            <forceJavacCompilerUse>true</forceJavacCompilerUse>
+            <compilerArgs>
+              <arg>-XepAllErrorsAsWarnings</arg>
+              <arg>-XepDisableWarningsInGeneratedCode</arg>
+            </compilerArgs>
             <showWarnings>true</showWarnings>
+            <forceJavacCompilerUse>true</forceJavacCompilerUse>
             <source>${maven.compiler.source}</source>
             <target>${maven.compiler.target}</target>
           </configuration>
+
           <dependencies>
             <dependency>
               <groupId>org.codehaus.plexus</groupId>
               <artifactId>plexus-compiler-javac-errorprone</artifactId>
-              <version>2.8.5</version>
+              <version>${errorprone.plugin.version}</version>
             </dependency>
-            <!-- override plexus-compiler-javac-errorprone's dependency on
-                 Res Prone with the latest version -->
             <dependency>
               <groupId>com.google.errorprone</groupId>
               <artifactId>error_prone_core</artifactId>
               <version>${errorprone.version}</version>
             </dependency>
           </dependencies>
+
+          <executions>
+            <!-- Replacing default-compile as it is treated specially by maven -->
+            <execution>
+              <id>default-compile</id>
+              <phase>none</phase>
+            </execution>
+            <!-- Replacing default-testCompile as it is treated specially by maven -->
+            <execution>
+              <id>default-testCompile</id>
+              <phase>none</phase>
+            </execution>
+            <execution>
+              <id>java-compile</id>
+              <phase>compile</phase>
+              <goals>
+                <goal>compile</goal>
+              </goals>
+            </execution>
+            <execution>
+              <id>java-test-compile</id>
+              <phase>test-compile</phase>
+              <goals>
+                <goal>testCompile</goal>
+              </goals>
+            </execution>
+          </executions>
         </plugin>
 
-        <!-- Enable JUnit 5 tests. -->
+        <!-- Enable JUnit5 unit tests. -->
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-surefire-plugin</artifactId>
-          <version>2.22.0</version>
+          <version>${surefire.plugin.version}</version>
           <configuration>
             <redirectTestOutputToFile>false</redirectTestOutputToFile>
           </configuration>
@@ -348,6 +471,16 @@
           </executions>
         </plugin>
 
+        <!-- Versions plugin -->
+        <plugin>
+          <groupId>org.codehaus.mojo</groupId>
+          <artifactId>versions-maven-plugin</artifactId>
+          <version>${versions.plugin.version}</version>
+          <configuration>
+            <generateBackupPoms>false</generateBackupPoms>
+          </configuration>
+        </plugin>
+
         <!--Add git Properties to manifest-->
         <plugin>
           <groupId>pl.project13.maven</groupId>
@@ -360,7 +493,7 @@
         <plugin>
           <groupId>com.coveo</groupId>
           <artifactId>fmt-maven-plugin</artifactId>
-          <version>2.5.1</version>
+          <version>${conveofmt.plugin.version}</version>
           <executions>
             <execution>
               <goals>
@@ -406,7 +539,7 @@
           <plugin>
             <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-failsafe-plugin</artifactId>
-            <version>2.19.1</version>
+            <version>${surefire.plugin.version}</version>
             <executions>
               <execution>
                 <goals>

@@ -51,7 +51,7 @@ public abstract class Error {
    * @return {@link InfobloxException}
    */
   public InfobloxException cause() {
-    return new InfobloxException(code() + ": " + error());
+    return new InfobloxException(this);
   }
 
   /**

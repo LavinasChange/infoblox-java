@@ -10,40 +10,46 @@ import java.io.IOException;
  */
 public class InfobloxException extends IOException {
 
+  private String code;
+  private String error;
+  private String text;
+
   /**
-   * Creates new IBA exception for the given error response.
+   * Creates new Infoblox exception for the given error response.
    *
    * @param ibaError {@link Error}
    */
   public InfobloxException(Error ibaError) {
-    super(ibaError.error());
+    super(ibaError.code() + " - " + ibaError.error());
+    code = ibaError.code();
+    error = ibaError.error();
+    text = ibaError.text();
   }
 
   /**
-   * Constructs a new IBA exception with the specified error message.
+   * Symbolic error code.
    *
-   * @param message error message.
+   * @return error code.
    */
-  public InfobloxException(String message) {
-    super(message);
+  public String getCode() {
+    return code;
   }
 
   /**
-   * Constructs a new IBA exception with the specified error message and cause.
+   * Error type (followed by an explanation after :)
    *
-   * @param message error message.
-   * @param cause the cause.
+   * @return error type
    */
-  public InfobloxException(String message, Throwable cause) {
-    super(message, cause);
+  public String getError() {
+    return error;
   }
 
   /**
-   * Constructs a new IBA exception with the specified cause.
+   * Explanation of the error.
    *
-   * @param cause the cause.
+   * @return error description
    */
-  public InfobloxException(Throwable cause) {
-    super(cause);
+  public String getText() {
+    return text;
   }
 }

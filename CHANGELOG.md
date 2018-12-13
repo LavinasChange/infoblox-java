@@ -6,6 +6,13 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 ### Changed
+
+## [1.3.3] - 2018-12-13
+### Added
+- Infoblox provider based on the domain.
+
+### Changed
+- Updated dependencies and plugins to the latest version.
 - Fixed surefire dependencies for Junit5
 
 ## [1.3.2] - 2018-08-12
@@ -75,7 +82,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### Added
 - Infoblox java api initial release.
 
-[Unreleased]: https://gecgithub01.walmart.com/oneops/infoblox-java/compare/infoblox-java-1.3.2...HEAD
+[Unreleased]: https://gecgithub01.walmart.com/oneops/infoblox-java/compare/infoblox-java-1.3.3...HEAD
+[1.3.3]: https://gecgithub01.walmart.com/oneops/infoblox-java/compare/infoblox-java-1.3.2...infoblox-java-1.3.3
 [1.3.2]: https://gecgithub01.walmart.com/oneops/infoblox-java/compare/infoblox-java-1.3.1...infoblox-java-1.3.2
 [1.3.1]: https://gecgithub01.walmart.com/oneops/infoblox-java/compare/infoblox-java-1.3.0...infoblox-java-1.3.1
 [1.3.0]: https://gecgithub01.walmart.com/oneops/infoblox-java/compare/infoblox-java-1.2.4...infoblox-java-1.3.0
