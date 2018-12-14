@@ -12,7 +12,7 @@ Download [the latest JAR][1] or grab via Maven:
 <dependency>
    <groupId>com.oneops</groupId>
    <artifactId>infoblox-java</artifactId>
-   <version>1.3.3</version>
+   <version>1.3.4</version>
 </dependency>
 ```
 > To see all versions, go [here][0]
@@ -30,11 +30,13 @@ InfobloxClient client = InfobloxClient.builder()
             .tlsVerify(false)
             .build();
 ```
+> Default WAPI version is <b>v2.5</b>
+
 <details>
  <summary>Walmart Infoblox Provider</summary>
 
    A new `InfobloxClientProvider` class has been provided to create 
-   `InfobloxClient` trasparently based on the `FQDN`. This will be make use of a `/secrets/infoblox-conf.json` config file to get all the infoblox endpoint configurations. To get a client (cached) for supported domain, 
+   `InfobloxClient` transparently based on the `FQDN`. This will be make use of a `/secrets/infoblox-conf.json` config file to get all the infoblox endpoint configurations. To get a client (cached) for supported domain, 
 
    ```java 
    String fqdn = "test.us.walmart.net";
@@ -53,7 +55,6 @@ InfobloxClient client = InfobloxClient.builder()
   - For loading the Truststore from classpath use, `classpath:/<your/truststore/path>.p12`
   - To enable http debugging for troubleshooting, set [.debug(true)][5] to the [InfobloxClient.builder()][6]
 </details><br/>
-  
 
 #### **A** Record
 
