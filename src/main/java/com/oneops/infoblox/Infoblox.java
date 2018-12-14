@@ -65,129 +65,181 @@ public interface Infoblox {
   String TTL_FIELDS = "_return_fields=view,ttl";
 
   /** Auth zone Record */
-  @GET("zone_auth?" + ZONE_AUTH_FIELDS)
-  Call<Result<List<ZoneAuth>>> queryAuthZones();
+  @GET("{version}/zone_auth?" + ZONE_AUTH_FIELDS)
+  Call<Result<List<ZoneAuth>>> queryAuthZones(@Path(value = "version") String version);
 
-  @GET("zone_auth?" + ZONE_AUTH_FIELDS)
-  Call<Result<List<ZoneAuth>>> queryAuthZone(@QueryMap(encoded = true) Map<String, String> options);
+  @GET("{version}/zone_auth?" + ZONE_AUTH_FIELDS)
+  Call<Result<List<ZoneAuth>>> queryAuthZone(
+      @Path(value = "version") String version,
+      @QueryMap(encoded = true) Map<String, String> options);
 
   /** Zone delegation */
-  @GET("zone_delegated?" + ZONE_DELEGATE_FIELDS)
+  @GET("{version}/zone_delegated?" + ZONE_DELEGATE_FIELDS)
   Call<Result<List<ZoneDelegate>>> queryDelegatedZone(
+      @Path(value = "version") String version,
       @QueryMap(encoded = true) Map<String, Object> options);
 
-  @POST("zone_delegated?" + ZONE_DELEGATE_FIELDS)
-  Call<Result<ZoneDelegate>> createDelegatedZone(@Body Map<String, Object> req);
+  @POST("{version}/zone_delegated?" + ZONE_DELEGATE_FIELDS)
+  Call<Result<ZoneDelegate>> createDelegatedZone(
+      @Path(value = "version") String version, @Body Map<String, Object> req);
 
-  @PUT("zone_delegated?" + ZONE_DELEGATE_FIELDS)
+  @PUT("{version}/{ref}?" + ZONE_DELEGATE_FIELDS)
   Call<Result<ZoneDelegate>> modifyDelegatedZone(
-      @Path(value = "ref", encoded = true) String ref, @Body Map<String, Object> req);
+      @Path(value = "version") String version,
+      @Path(value = "ref", encoded = true) String ref,
+      @Body Map<String, Object> req);
 
   /** Host Record */
-  @GET("./record:host?" + HOST_FIELDS)
-  Call<Result<List<Host>>> queryHostRec(@QueryMap(encoded = true) Map<String, String> options);
+  @GET("{version}/record:host?" + HOST_FIELDS)
+  Call<Result<List<Host>>> queryHostRec(
+      @Path(value = "version") String version,
+      @QueryMap(encoded = true) Map<String, String> options);
 
-  @POST("./record:host?" + HOST_FIELDS)
-  Call<Result<Host>> createHostRec(@Body Map<String, Object> req);
+  @POST("{version}/record:host?" + HOST_FIELDS)
+  Call<Result<Host>> createHostRec(
+      @Path(value = "version") String version, @Body Map<String, Object> req);
 
   /** A Record */
-  @GET("./record:a?" + A_FIELDS)
-  Call<Result<List<ARec>>> queryARec(@QueryMap(encoded = true) Map<String, String> options);
+  @GET("{version}/record:a?" + A_FIELDS)
+  Call<Result<List<ARec>>> queryARec(
+      @Path(value = "version") String version,
+      @QueryMap(encoded = true) Map<String, String> options);
 
-  @POST("./record:a?" + A_FIELDS)
-  Call<Result<ARec>> createARec(@Body Map<String, Object> req);
+  @POST("{version}/record:a?" + A_FIELDS)
+  Call<Result<ARec>> createARec(
+      @Path(value = "version") String version, @Body Map<String, Object> req);
 
-  @PUT("./{ref}?" + A_FIELDS)
+  @PUT("{version}/{ref}?" + A_FIELDS)
   Call<Result<ARec>> modifyARec(
-      @Path(value = "ref", encoded = true) String ref, @Body Map<String, String> req);
+      @Path(value = "version") String version,
+      @Path(value = "ref", encoded = true) String ref,
+      @Body Map<String, String> req);
 
   /** AAAA Record */
-  @GET("./record:aaaa?" + AAAA_FIELDS)
-  Call<Result<List<AAAA>>> queryAAAARec(@QueryMap(encoded = true) Map<String, String> options);
+  @GET("{version}/record:aaaa?" + AAAA_FIELDS)
+  Call<Result<List<AAAA>>> queryAAAARec(
+      @Path(value = "version") String version,
+      @QueryMap(encoded = true) Map<String, String> options);
 
-  @POST("./record:aaaa?" + AAAA_FIELDS)
-  Call<Result<AAAA>> createAAAARec(@Body Map<String, Object> req);
+  @POST("{version}/record:aaaa?" + AAAA_FIELDS)
+  Call<Result<AAAA>> createAAAARec(
+      @Path(value = "version") String version, @Body Map<String, Object> req);
 
-  @PUT("./{ref}?" + AAAA_FIELDS)
+  @PUT("{version}/{ref}?" + AAAA_FIELDS)
   Call<Result<AAAA>> modifyAAAARec(
-      @Path(value = "ref", encoded = true) String ref, @Body Map<String, String> req);
+      @Path(value = "version") String version,
+      @Path(value = "ref", encoded = true) String ref,
+      @Body Map<String, String> req);
 
   /** CNAME Record */
-  @GET("./record:cname?" + CNAME_FIELDS)
-  Call<Result<List<CNAME>>> queryCNAMERec(@QueryMap(encoded = true) Map<String, String> options);
+  @GET("{version}/record:cname?" + CNAME_FIELDS)
+  Call<Result<List<CNAME>>> queryCNAMERec(
+      @Path(value = "version") String version,
+      @QueryMap(encoded = true) Map<String, String> options);
 
-  @POST("./record:cname?" + CNAME_FIELDS)
-  Call<Result<CNAME>> createCNAMERec(@Body Map<String, Object> req);
+  @POST("{version}/record:cname?" + CNAME_FIELDS)
+  Call<Result<CNAME>> createCNAMERec(
+      @Path(value = "version") String version, @Body Map<String, Object> req);
 
-  @PUT("./{ref}?" + CNAME_FIELDS)
+  @PUT("{version}/{ref}?" + CNAME_FIELDS)
   Call<Result<CNAME>> modifyCNAMERec(
-      @Path(value = "ref", encoded = true) String ref, @Body Map<String, String> req);
+      @Path(value = "version") String version,
+      @Path(value = "ref", encoded = true) String ref,
+      @Body Map<String, String> req);
 
   /** MX Record */
-  @GET("./record:mx?" + MX_FIELDS)
-  Call<Result<List<MX>>> queryMXRec(@QueryMap(encoded = true) Map<String, String> options);
+  @GET("{version}/record:mx?" + MX_FIELDS)
+  Call<Result<List<MX>>> queryMXRec(
+      @Path(value = "version") String version,
+      @QueryMap(encoded = true) Map<String, String> options);
 
-  @POST("./record:mx?" + MX_FIELDS)
-  Call<Result<MX>> createMXRec(@Body Map<String, Object> req);
+  @POST("{version}/record:mx?" + MX_FIELDS)
+  Call<Result<MX>> createMXRec(
+      @Path(value = "version") String version, @Body Map<String, Object> req);
 
-  @PUT("./{ref}?" + MX_FIELDS)
+  @PUT("{version}/{ref}?" + MX_FIELDS)
   Call<Result<MX>> modifyMXRec(
-      @Path(value = "ref", encoded = true) String ref, @Body Map<String, String> req);
+      @Path(value = "version") String version,
+      @Path(value = "ref", encoded = true) String ref,
+      @Body Map<String, String> req);
 
   /** NS Record */
-  @GET("./record:ns?" + NS_FIELDS)
-  Call<Result<List<NS>>> queryNSRec(@QueryMap(encoded = true) Map<String, String> options);
+  @GET("{version}/record:ns?" + NS_FIELDS)
+  Call<Result<List<NS>>> queryNSRec(
+      @Path(value = "version") String version,
+      @QueryMap(encoded = true) Map<String, String> options);
 
-  @POST("./record:ns?" + NS_FIELDS)
-  Call<Result<NS>> createNSRec(@Body Map<String, Object> req);
+  @POST("{version}/record:ns?" + NS_FIELDS)
+  Call<Result<NS>> createNSRec(
+      @Path(value = "version") String version, @Body Map<String, Object> req);
 
-  @PUT("./{ref}?" + NS_FIELDS)
+  @PUT("{version}/{ref}?" + NS_FIELDS)
   Call<Result<NS>> modifyNSRec(
-      @Path(value = "ref", encoded = true) String ref, @Body Map<String, String> req);
+      @Path(value = "version") String version,
+      @Path(value = "ref", encoded = true) String ref,
+      @Body Map<String, String> req);
 
   /** PTR Record */
-  @GET("./record:ptr?" + PTR_FIELDS)
-  Call<Result<List<PTR>>> queryPTRRec(@QueryMap(encoded = true) Map<String, String> options);
+  @GET("{version}/record:ptr?" + PTR_FIELDS)
+  Call<Result<List<PTR>>> queryPTRRec(
+      @Path(value = "version") String version,
+      @QueryMap(encoded = true) Map<String, String> options);
 
-  @POST("./record:ptr?" + PTR_FIELDS)
-  Call<Result<PTR>> createPTRRec(@Body Map<String, Object> req);
+  @POST("{version}/record:ptr?" + PTR_FIELDS)
+  Call<Result<PTR>> createPTRRec(
+      @Path(value = "version") String version, @Body Map<String, Object> req);
 
-  @PUT("./{ref}?" + PTR_FIELDS)
+  @PUT("{version}/{ref}?" + PTR_FIELDS)
   Call<Result<PTR>> modifyPTRRec(
-      @Path(value = "ref", encoded = true) String ref, @Body Map<String, String> req);
+      @Path(value = "version") String version,
+      @Path(value = "ref", encoded = true) String ref,
+      @Body Map<String, String> req);
 
   /** SRV Record */
-  @GET("./record:srv?" + SRV_FIELDS)
-  Call<Result<List<SRV>>> querySRVRec(@QueryMap(encoded = true) Map<String, String> options);
+  @GET("{version}/record:srv?" + SRV_FIELDS)
+  Call<Result<List<SRV>>> querySRVRec(
+      @Path(value = "version") String version,
+      @QueryMap(encoded = true) Map<String, String> options);
 
-  @POST("./record:srv?" + SRV_FIELDS)
-  Call<Result<SRV>> createSRVRec(@Body Map<String, Object> req);
+  @POST("{version}/record:srv?" + SRV_FIELDS)
+  Call<Result<SRV>> createSRVRec(
+      @Path(value = "version") String version, @Body Map<String, Object> req);
 
-  @PUT("./{ref}?" + SRV_FIELDS)
+  @PUT("{version}/{ref}?" + SRV_FIELDS)
   Call<Result<SRV>> modifySRVRec(
-      @Path(value = "ref", encoded = true) String ref, @Body Map<String, String> req);
+      @Path(value = "version") String version,
+      @Path(value = "ref", encoded = true) String ref,
+      @Body Map<String, String> req);
 
   /** TXT Record */
-  @GET("./record:txt?" + TXT_FIELDS)
-  Call<Result<List<TXT>>> queryTXTRec(@QueryMap(encoded = true) Map<String, String> options);
+  @GET("{version}/record:txt?" + TXT_FIELDS)
+  Call<Result<List<TXT>>> queryTXTRec(
+      @Path(value = "version") String version,
+      @QueryMap(encoded = true) Map<String, String> options);
 
-  @POST("./record:txt?" + TXT_FIELDS)
-  Call<Result<TXT>> createTXTRec(@Body Map<String, Object> req);
+  @POST("{version}/record:txt?" + TXT_FIELDS)
+  Call<Result<TXT>> createTXTRec(
+      @Path(value = "version") String version, @Body Map<String, Object> req);
 
-  @PUT("./{ref}?" + TXT_FIELDS)
+  @PUT("{version}/{ref}?" + TXT_FIELDS)
   Call<Result<TXT>> modifyTXTRec(
-      @Path(value = "ref", encoded = true) String ref, @Body Map<String, String> req);
+      @Path(value = "version") String version,
+      @Path(value = "ref", encoded = true) String ref,
+      @Body Map<String, String> req);
 
   /** Delete Record */
-  @DELETE("./{ref}")
-  Call<Result<String>> deleteRef(@Path(value = "ref", encoded = true) String ref);
+  @DELETE("{version}/{ref}")
+  Call<Result<String>> deleteRef(
+      @Path(value = "version") String version, @Path(value = "ref", encoded = true) String ref);
 
   /** Modify TTL for a record */
-  @PUT("./{ref}?" + TTL_FIELDS)
+  @PUT("{version}/{ref}?" + TTL_FIELDS)
   Call<Result<TTLRec>> modifyTTL(
-      @Path(value = "ref", encoded = true) String ref, @Body Map<String, Object> req);
+      @Path(value = "version") String version,
+      @Path(value = "ref", encoded = true) String ref,
+      @Body Map<String, Object> req);
 
   /** Logout session */
-  @POST("logout")
-  Call<Void> logout();
+  @POST("{version}/logout")
+  Call<Void> logout(@Path(value = "version") String version);
 }

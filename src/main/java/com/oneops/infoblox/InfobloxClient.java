@@ -77,13 +77,31 @@ import retrofit2.converter.moshi.MoshiConverterFactory;
 public abstract class InfobloxClient {
 
   private final Logger log = LoggerFactory.getLogger(getClass());
+  private Infoblox infoblox;
+  private Converter<ResponseBody, Error> errResConverter;
+
+  /**
+   * Returns the builder for {@link InfobloxClient} with default values for un-initialized optional
+   * fields.
+   *
+   * @return Builder
+   */
+  public static Builder builder() {
+    return new AutoValue_InfobloxClient.Builder()
+        .wapiVersion("v2.5")
+        .dnsView("default")
+        .ttl(60)
+        .tlsVerify(true)
+        .timeout(30)
+        .debug(false);
+  }
 
   /** IBA IP address of management interface */
   public abstract String endPoint();
 
   /**
    * IBA WAPI version. Browse to <a href="https://infoblox-server/wapidoc/">WapiDoc</a> to see the
-   * current wapi version of Infoblox appliance. Defaults to 2.7
+   * current wapi version of Infoblox appliance. Defaults to <b>v2.5</b>
    */
   public abstract String wapiVersion();
 
@@ -135,10 +153,6 @@ public abstract class InfobloxClient {
 
   /** Enable http curl logging for debugging. */
   public abstract boolean debug();
-
-  private Infoblox infoblox;
-
-  private Converter<ResponseBody, Error> errResConverter;
 
   /**
    * Initializes the TLS retrofit client. Server Name Indication (SNI) TLS extension is disabled by
@@ -291,7 +305,7 @@ public abstract class InfobloxClient {
       } else {
         err = Error.create("Request failed, " + res.message(), res.code());
       }
-      throw err.cause();
+      throw requireNonNull(err).cause();
     }
   }
 
@@ -305,8 +319,10 @@ public abstract class InfobloxClient {
     if (!endPoint().toLowerCase().startsWith("http")) {
       buf.append("https://");
     }
-    return buf.append(endPoint()).append("/wapi/v").append(wapiVersion()).append("/").toString();
+    return buf.append(endPoint()).append("/wapi/").toString();
   }
+
+  // --------<Auth Zone Record>--------
 
   /**
    * Create a new request map with ttl set. TTL is associated with the flag <b>use_ttl</b>. In an
@@ -321,7 +337,6 @@ public abstract class InfobloxClient {
     return req;
   }
 
-  // --------<Auth Zone Record>--------
   /**
    * Fetch all Authoritative Zones.
    *
@@ -329,8 +344,10 @@ public abstract class InfobloxClient {
    * @throws IOException if a problem occurred talking to the infoblox.
    */
   public List<ZoneAuth> getAuthZones() throws IOException {
-    return exec(infoblox.queryAuthZones()).result();
+    return exec(infoblox.queryAuthZones(wapiVersion())).result();
   }
+
+  // --------<Delegated Zone Record>--------
 
   /**
    * Search all authoritative zones for the given domain name.
@@ -344,10 +361,9 @@ public abstract class InfobloxClient {
 
     Map<String, String> options = new HashMap<>(1);
     options.put("fqdn", domainName);
-    return exec(infoblox.queryAuthZone(options)).result();
+    return exec(infoblox.queryAuthZone(wapiVersion(), options)).result();
   }
 
-  // --------<Delegated Zone Record>--------
   /**
    * Fetch all delegated zones by querying pageSize max results at a time.
    *
@@ -360,14 +376,14 @@ public abstract class InfobloxClient {
     req.put("_paging", 1);
     req.put("_max_results", pageSize);
 
-    Result<List<ZoneDelegate>> res = exec(infoblox.queryDelegatedZone(req));
+    Result<List<ZoneDelegate>> res = exec(infoblox.queryDelegatedZone(wapiVersion(), req));
     String nextPageId = res.nextPageId();
     List<ZoneDelegate> delegZones = new ArrayList<>(res.result());
 
     while (nextPageId != null) {
       log.info("Querying next page id: " + nextPageId);
       req.put("_page_id", nextPageId);
-      res = exec(infoblox.queryDelegatedZone(req));
+      res = exec(infoblox.queryDelegatedZone(wapiVersion(), req));
       nextPageId = res.nextPageId();
       delegZones.addAll(res.result());
     }
@@ -385,7 +401,7 @@ public abstract class InfobloxClient {
     requireNonNull(domainName, "Domain name is null");
     Map<String, Object> options = new HashMap<>(1);
     options.put("fqdn", domainName);
-    return exec(infoblox.queryDelegatedZone(options)).result();
+    return exec(infoblox.queryDelegatedZone(wapiVersion(), options)).result();
   }
 
   /**
@@ -405,7 +421,7 @@ public abstract class InfobloxClient {
     req.put("fqdn", domainName);
     req.put("delegate_to", delegateTo);
     req.put("delegated_ttl", ttl);
-    return exec(infoblox.createDelegatedZone(req)).result();
+    return exec(infoblox.createDelegatedZone(wapiVersion(), req)).result();
   }
 
   /**
@@ -424,7 +440,8 @@ public abstract class InfobloxClient {
             rec -> {
               try {
                 log.warn("Modifying delegated zone config for " + rec + " to" + params);
-                return exec(infoblox.modifyDelegatedZone(rec.ref().value(), params)).result();
+                return exec(infoblox.modifyDelegatedZone(wapiVersion(), rec.ref().value(), params))
+                    .result();
               } catch (IOException ioe) {
                 throw new IllegalStateException(
                     "Error modifying delegated zone record: " + rec, ioe);
@@ -432,6 +449,8 @@ public abstract class InfobloxClient {
             })
         .collect(Collectors.toList());
   }
+
+  // --------<Host Record>--------
 
   /**
    * Delete delegated zones for the given domain name.
@@ -444,7 +463,6 @@ public abstract class InfobloxClient {
     return deleteRecords(getDelegatedZones(domainName));
   }
 
-  // --------<Host Record>--------
   /**
    * Get host information for the given domain name and search option.
    *
@@ -456,7 +474,7 @@ public abstract class InfobloxClient {
     requireNonNull(domainName, "Domain name is null");
     Map<String, String> options = new HashMap<>(1);
     options.put("name" + modifier.getValue(), domainName);
-    return exec(infoblox.queryHostRec(options)).result();
+    return exec(infoblox.queryHostRec(wapiVersion(), options)).result();
   }
 
   /**
@@ -496,8 +514,10 @@ public abstract class InfobloxClient {
     Map<String, Object> req = newTTLReq();
     req.put("name", domainName);
     req.put("ipv4addrs", addrs);
-    return exec(infoblox.createHostRec(req)).result();
+    return exec(infoblox.createHostRec(wapiVersion(), req)).result();
   }
+
+  // --------<A Record>--------
 
   /**
    * Deletes IBA host record with given domain name.
@@ -510,7 +530,6 @@ public abstract class InfobloxClient {
     return deleteRecords(getHostRec(domainName));
   }
 
-  // --------<A Record>--------
   /**
    * Get address records (A Record) for the given domain name and search option.
    *
@@ -579,7 +598,7 @@ public abstract class InfobloxClient {
     if (ipv4Address != null) {
       options.put("ipv4addr", ipv4Address);
     }
-    return exec(infoblox.queryARec(options)).result();
+    return exec(infoblox.queryARec(wapiVersion(), options)).result();
   }
 
   /**
@@ -596,7 +615,7 @@ public abstract class InfobloxClient {
     Map<String, Object> req = newTTLReq();
     req.put("name", domainName);
     req.put("ipv4addr", ipv4Address);
-    return exec(infoblox.createARec(req)).result();
+    return exec(infoblox.createARec(wapiVersion(), req)).result();
   }
 
   /**
@@ -637,13 +656,15 @@ public abstract class InfobloxClient {
               Map<String, String> req = new HashMap<>(1);
               req.put("name", newDomainName);
               try {
-                return exec(infoblox.modifyARec(rec.ref().value(), req)).result();
+                return exec(infoblox.modifyARec(wapiVersion(), rec.ref().value(), req)).result();
               } catch (IOException ioe) {
                 throw new IllegalStateException("Error modifying A record: " + rec, ioe);
               }
             })
         .collect(Collectors.toList());
   }
+
+  // --------<AAAA Record>--------
 
   /**
    * Modify the IPv4 address of A record with given domain name.
@@ -662,7 +683,7 @@ public abstract class InfobloxClient {
               Map<String, String> req = new HashMap<>(1);
               req.put("ipv4addr", newIPv4Address);
               try {
-                return exec(infoblox.modifyARec(rec.ref().value(), req)).result();
+                return exec(infoblox.modifyARec(wapiVersion(), rec.ref().value(), req)).result();
               } catch (IOException ioe) {
                 throw new IllegalStateException("Error modifying A record: " + rec, ioe);
               }
@@ -670,7 +691,6 @@ public abstract class InfobloxClient {
         .collect(Collectors.toList());
   }
 
-  // --------<AAAA Record>--------
   /**
    * Get IPv6 address records (AAAA) for the given domain name and search option.
    *
@@ -739,7 +759,7 @@ public abstract class InfobloxClient {
     if (ipv6Address != null) {
       options.put("ipv6addr", ipv6Address);
     }
-    return exec(infoblox.queryAAAARec(options)).result();
+    return exec(infoblox.queryAAAARec(wapiVersion(), options)).result();
   }
 
   /**
@@ -756,7 +776,7 @@ public abstract class InfobloxClient {
     Map<String, Object> req = newTTLReq();
     req.put("name", domainName);
     req.put("ipv6addr", ipv6Address);
-    return exec(infoblox.createAAAARec(req)).result();
+    return exec(infoblox.createAAAARec(wapiVersion(), req)).result();
   }
 
   /**
@@ -797,13 +817,15 @@ public abstract class InfobloxClient {
               Map<String, String> req = new HashMap<>(1);
               req.put("name", newDomainName);
               try {
-                return exec(infoblox.modifyAAAARec(rec.ref().value(), req)).result();
+                return exec(infoblox.modifyAAAARec(wapiVersion(), rec.ref().value(), req)).result();
               } catch (IOException ioe) {
                 throw new IllegalStateException("Error modifying AAAA record: " + rec, ioe);
               }
             })
         .collect(Collectors.toList());
   }
+
+  // --------<CNAME Record>--------
 
   /**
    * Modify the IPv6 address of AAAA record with given domain name.
@@ -822,7 +844,7 @@ public abstract class InfobloxClient {
               Map<String, String> req = new HashMap<>(1);
               req.put("ipv6addr", newIPv6Address);
               try {
-                return exec(infoblox.modifyAAAARec(rec.ref().value(), req)).result();
+                return exec(infoblox.modifyAAAARec(wapiVersion(), rec.ref().value(), req)).result();
               } catch (IOException ioe) {
                 throw new IllegalStateException("Error modifying AAAA record: " + rec, ioe);
               }
@@ -830,7 +852,6 @@ public abstract class InfobloxClient {
         .collect(Collectors.toList());
   }
 
-  // --------<CNAME Record>--------
   /**
    * Get canonical records (CNAME) for the given alias name and search option.
    *
@@ -900,7 +921,7 @@ public abstract class InfobloxClient {
     if (canonicalName != null) {
       options.put("canonical" + modifier.getValue(), canonicalName);
     }
-    return exec(infoblox.queryCNAMERec(options)).result();
+    return exec(infoblox.queryCNAMERec(wapiVersion(), options)).result();
   }
 
   /**
@@ -919,7 +940,7 @@ public abstract class InfobloxClient {
     Map<String, Object> req = newTTLReq();
     req.put("name", aliasName);
     req.put("canonical", canonicalName);
-    return exec(infoblox.createCNAMERec(req)).result();
+    return exec(infoblox.createCNAMERec(wapiVersion(), req)).result();
   }
 
   /**
@@ -960,13 +981,16 @@ public abstract class InfobloxClient {
               Map<String, String> req = new HashMap<>(1);
               req.put("name", newAliasName);
               try {
-                return exec(infoblox.modifyCNAMERec(rec.ref().value(), req)).result();
+                return exec(infoblox.modifyCNAMERec(wapiVersion(), rec.ref().value(), req))
+                    .result();
               } catch (IOException ioe) {
                 throw new IllegalStateException("Error modifying CNAME record: " + rec, ioe);
               }
             })
         .collect(Collectors.toList());
   }
+
+  // --------<MX Record>--------
 
   /**
    * Modify canonical name of the CNAME record with new name.
@@ -984,7 +1008,8 @@ public abstract class InfobloxClient {
               Map<String, String> req = new HashMap<>(1);
               req.put("canonical", newCanonicalName);
               try {
-                return exec(infoblox.modifyCNAMERec(rec.ref().value(), req)).result();
+                return exec(infoblox.modifyCNAMERec(wapiVersion(), rec.ref().value(), req))
+                    .result();
               } catch (IOException ioe) {
                 throw new IllegalStateException("Error modifying CNAME record: " + rec, ioe);
               }
@@ -992,7 +1017,6 @@ public abstract class InfobloxClient {
         .collect(Collectors.toList());
   }
 
-  // --------<MX Record>--------
   /**
    * Get mail exchange (MX) record for the given domain name and search option.
    *
@@ -1005,7 +1029,7 @@ public abstract class InfobloxClient {
 
     Map<String, String> options = new HashMap<>(1);
     options.put("name" + modifier.getValue(), domainName);
-    return exec(infoblox.queryMXRec(options)).result();
+    return exec(infoblox.queryMXRec(wapiVersion(), options)).result();
   }
 
   /**
@@ -1037,7 +1061,7 @@ public abstract class InfobloxClient {
     String searchModifier = CASE_INSENSITIVE.getValue();
     options.put("name" + searchModifier, domainName);
     options.put("mail_exchanger", mailExchanger);
-    return exec(infoblox.queryMXRec(options)).result();
+    return exec(infoblox.queryMXRec(wapiVersion(), options)).result();
   }
 
   /**
@@ -1061,7 +1085,7 @@ public abstract class InfobloxClient {
     req.put("name", domainName);
     req.put("mail_exchanger", mailExchanger);
     req.put("preference", preference);
-    return exec(infoblox.createMXRec(req)).result();
+    return exec(infoblox.createMXRec(wapiVersion(), req)).result();
   }
 
   /**
@@ -1088,6 +1112,8 @@ public abstract class InfobloxClient {
     return deleteRecords(getMXRec(domainName, mailExchanger));
   }
 
+  // --------<PTR Record>--------
+
   /**
    * Modify the MX record domain name.
    *
@@ -1103,15 +1129,13 @@ public abstract class InfobloxClient {
               Map<String, String> req = new HashMap<>(1);
               req.put("name", newDomainName);
               try {
-                return exec(infoblox.modifyMXRec(rec.ref().value(), req)).result();
+                return exec(infoblox.modifyMXRec(wapiVersion(), rec.ref().value(), req)).result();
               } catch (IOException ioe) {
                 throw new IllegalStateException("Error modifying MX record: " + rec, ioe);
               }
             })
         .collect(Collectors.toList());
   }
-
-  // --------<PTR Record>--------
 
   /**
    * Get pointer records (PTR) for the given IP Address.
@@ -1125,7 +1149,7 @@ public abstract class InfobloxClient {
 
     Map<String, String> options = new HashMap<>(1);
     options.put(addrType, ipAddress);
-    return exec(infoblox.queryPTRRec(options)).result();
+    return exec(infoblox.queryPTRRec(wapiVersion(), options)).result();
   }
 
   /**
@@ -1140,7 +1164,7 @@ public abstract class InfobloxClient {
     Map<String, String> options = new HashMap<>(1);
     String searchModifier = CASE_INSENSITIVE.getValue();
     options.put("ptrdname" + searchModifier, ptrdname);
-    return exec(infoblox.queryPTRRec(options)).result();
+    return exec(infoblox.queryPTRRec(wapiVersion(), options)).result();
   }
 
   /**
@@ -1160,7 +1184,7 @@ public abstract class InfobloxClient {
     req.put("name", PTR.reverseMapName(InetAddress.getByName(ipAddress)));
     req.put("ptrdname", ptrdname);
     req.put(addrType, ipAddress);
-    return exec(infoblox.createPTRRec(req)).result();
+    return exec(infoblox.createPTRRec(wapiVersion(), req)).result();
   }
 
   /**
@@ -1178,7 +1202,7 @@ public abstract class InfobloxClient {
               Map<String, String> req = new HashMap<>(1);
               req.put("ptrdname", newPtrdname);
               try {
-                return exec(infoblox.modifyPTRRec(rec.ref().value(), req)).result();
+                return exec(infoblox.modifyPTRRec(wapiVersion(), rec.ref().value(), req)).result();
               } catch (IOException ioe) {
                 throw new IllegalStateException("Error modifying PTR record: " + rec, ioe);
               }
@@ -1197,6 +1221,8 @@ public abstract class InfobloxClient {
     return deleteRecords(getPTRRec(ipAddress));
   }
 
+  // --------<TXT Record>--------
+
   /**
    * Deletes PTR records for the given domain name.
    *
@@ -1207,8 +1233,6 @@ public abstract class InfobloxClient {
   public List<String> deletePTRDRec(String ptrdname) throws IOException {
     return deleteRecords(getPTRDRec(ptrdname));
   }
-
-  // --------<TXT Record>--------
 
   /**
    * Get text (TXT) record for the given domain name and search option.
@@ -1222,7 +1246,7 @@ public abstract class InfobloxClient {
 
     Map<String, String> options = new HashMap<>(1);
     options.put("name" + modifier.getValue(), domainName);
-    return exec(infoblox.queryTXTRec(options)).result();
+    return exec(infoblox.queryTXTRec(wapiVersion(), options)).result();
   }
 
   /**
@@ -1251,7 +1275,7 @@ public abstract class InfobloxClient {
     Map<String, Object> req = newTTLReq();
     req.put("name", domainName);
     req.put("text", text);
-    return exec(infoblox.createTXTRec(req)).result();
+    return exec(infoblox.createTXTRec(wapiVersion(), req)).result();
   }
 
   /**
@@ -1264,6 +1288,12 @@ public abstract class InfobloxClient {
   public List<String> deleteTXTRec(String domainName) throws IOException {
     return deleteRecords(getTXTRec(domainName));
   }
+
+  // --------<SRV Record>--------
+
+  // --------<NS Record>--------
+
+  // --------<TTL>--------
 
   /**
    * Modify the TXT record of a domain name.
@@ -1280,7 +1310,7 @@ public abstract class InfobloxClient {
               Map<String, String> req = new HashMap<>(1);
               req.put("text", newText);
               try {
-                return exec(infoblox.modifyTXTRec(rec.ref().value(), req)).result();
+                return exec(infoblox.modifyTXTRec(wapiVersion(), rec.ref().value(), req)).result();
               } catch (IOException ioe) {
                 throw new IllegalStateException("Error modifying TXT record: " + rec, ioe);
               }
@@ -1288,11 +1318,6 @@ public abstract class InfobloxClient {
         .collect(Collectors.toList());
   }
 
-  // --------<SRV Record>--------
-
-  // --------<NS Record>--------
-
-  // --------<TTL>--------
   /**
    * Modify TTL for a record.
    *
@@ -1307,7 +1332,7 @@ public abstract class InfobloxClient {
 
     Map<String, Object> req = newTTLReq();
     req.put("ttl", newTTL);
-    return exec(infoblox.modifyTTL(record.ref().value(), req)).result();
+    return exec(infoblox.modifyTTL(wapiVersion(), record.ref().value(), req)).result();
   }
 
   /**
@@ -1336,7 +1361,7 @@ public abstract class InfobloxClient {
   public <T extends Record> String deleteRecord(T rec) throws IOException {
     requireNonNull(rec, "Record is null.");
     log.warn("Deleting a dns record: " + rec);
-    return exec(infoblox.deleteRef(rec.ref().value())).result();
+    return exec(infoblox.deleteRef(wapiVersion(), rec.ref().value())).result();
   }
 
   /**
@@ -1349,23 +1374,7 @@ public abstract class InfobloxClient {
   public String deleteRef(Ref ref) throws IOException {
     requireNonNull(ref, "Reference is null.");
     log.warn("Deleting a dns record with ref: " + ref);
-    return exec(infoblox.deleteRef(ref.value())).result();
-  }
-
-  /**
-   * Returns the builder for {@link InfobloxClient} with default values for un-initialized optional
-   * fields.
-   *
-   * @return Builder
-   */
-  public static Builder builder() {
-    return new AutoValue_InfobloxClient.Builder()
-        .wapiVersion("2.5")
-        .dnsView("default")
-        .ttl(60)
-        .tlsVerify(true)
-        .timeout(30)
-        .debug(false);
+    return exec(infoblox.deleteRef(wapiVersion(), ref.value())).result();
   }
 
   @AutoValue.Builder
