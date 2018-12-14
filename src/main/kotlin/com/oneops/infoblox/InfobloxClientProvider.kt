@@ -25,7 +25,7 @@ object InfobloxClientProvider {
      */
     init {
         val adapter = listAdapter<InfobloxConfig>()
-            ibaConfigs = adapter.fromJson(File("/secrets/infoblox-conf.json").readText()) ?: emptyList()
+        ibaConfigs = adapter.fromJson(File("/secrets/infoblox-conf.json").readText()) ?: emptyList()
         log.info("Infoblox config: $ibaConfigs")
         check(ibaConfigs.isNotEmpty()) { "Invalid infoblox config." }
     }
@@ -57,7 +57,8 @@ object InfobloxClientProvider {
                 }
             }
         }
-        requireNotNull(config) { "Can't find the infoblox config for $fqdn" }
+
+        requireNotNull(config) { "$fqdn domain is not supported!" }
         log.info("Using $config for $fqdn")
 
         return clientCache.computeIfAbsent(config.endpoint) {
