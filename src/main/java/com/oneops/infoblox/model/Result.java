@@ -15,15 +15,20 @@ import javax.annotation.Nullable;
 @AutoValue
 public abstract class Result<T> {
 
+  public static <T> Builder<T> builder() {
+    return new AutoValue_Result.Builder<T>();
+  }
+
+  /** Json adapter for {@link Result} type, used by Moshi for JSON [de]serialization. */
+  public static <T> JsonAdapter<Result<T>> jsonAdapter(Moshi moshi, Type[] types) {
+    return new AutoValue_Result.MoshiJsonAdapter<>(moshi, types);
+  }
+
   public abstract T result();
 
   @Json(name = "next_page_id")
   @Nullable
   public abstract String nextPageId();
-
-  public static <T> Builder<T> builder() {
-    return new AutoValue_Result.Builder<T>();
-  }
 
   @AutoValue.Builder
   public abstract static class Builder<T> {
@@ -33,10 +38,5 @@ public abstract class Result<T> {
     public abstract Builder<T> nextPageId(String nextPageId);
 
     public abstract Result<T> build();
-  }
-
-  /** Json adapter for {@link Result} type, used by Moshi for JSON [de]serialization. */
-  public static <T> JsonAdapter<Result<T>> jsonAdapter(Moshi moshi, Type[] types) {
-    return new AutoValue_Result.MoshiJsonAdapter<>(moshi, types);
   }
 }

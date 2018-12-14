@@ -17,6 +17,14 @@ import java.util.List;
 @AutoValue
 public abstract class ZoneDelegate extends Record {
 
+  public static Builder builder() {
+    return new AutoValue_ZoneDelegate.Builder();
+  }
+
+  public static JsonAdapter<ZoneDelegate> jsonAdapter(Moshi moshi) {
+    return new AutoValue_ZoneDelegate.MoshiJsonAdapter(moshi);
+  }
+
   public abstract String fqdn();
 
   @Json(name = "delegate_to")
@@ -28,10 +36,6 @@ public abstract class ZoneDelegate extends Record {
 
   public abstract boolean locked();
 
-  public static Builder builder() {
-    return new AutoValue_ZoneDelegate.Builder();
-  }
-
   @AutoValue.Builder
   public abstract static class Builder extends RecBuilder<Builder> {
 
@@ -42,9 +46,5 @@ public abstract class ZoneDelegate extends Record {
     public abstract Builder locked(boolean locked);
 
     public abstract ZoneDelegate build();
-  }
-
-  public static JsonAdapter<ZoneDelegate> jsonAdapter(Moshi moshi) {
-    return new AutoValue_ZoneDelegate.MoshiJsonAdapter(moshi);
   }
 }

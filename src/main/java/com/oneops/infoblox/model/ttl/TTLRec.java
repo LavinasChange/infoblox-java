@@ -17,12 +17,12 @@ public abstract class TTLRec extends Record {
     return new AutoValue_TTLRec.Builder();
   }
 
+  public static JsonAdapter<TTLRec> jsonAdapter(Moshi moshi) {
+    return new AutoValue_TTLRec.MoshiJsonAdapter(moshi);
+  }
+
   @AutoValue.Builder
   public abstract static class Builder extends RecBuilder<Builder> {
     public abstract TTLRec build();
-  }
-
-  public static JsonAdapter<TTLRec> jsonAdapter(Moshi moshi) {
-    return new AutoValue_TTLRec.MoshiJsonAdapter(moshi);
   }
 }

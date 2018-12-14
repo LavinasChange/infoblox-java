@@ -13,13 +13,17 @@ import com.squareup.moshi.Moshi;
 @AutoValue
 public abstract class CNAME extends Record {
 
-  public abstract String canonical();
-
-  public abstract String name();
-
   public static Builder builder() {
     return new AutoValue_CNAME.Builder();
   }
+
+  public static JsonAdapter<CNAME> jsonAdapter(Moshi moshi) {
+    return new AutoValue_CNAME.MoshiJsonAdapter(moshi);
+  }
+
+  public abstract String canonical();
+
+  public abstract String name();
 
   @AutoValue.Builder
   public abstract static class Builder extends RecBuilder<Builder> {
@@ -29,9 +33,5 @@ public abstract class CNAME extends Record {
     public abstract Builder name(String name);
 
     public abstract CNAME build();
-  }
-
-  public static JsonAdapter<CNAME> jsonAdapter(Moshi moshi) {
-    return new AutoValue_CNAME.MoshiJsonAdapter(moshi);
   }
 }

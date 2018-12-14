@@ -14,16 +14,20 @@ import com.squareup.moshi.Moshi;
 @AutoValue
 public abstract class MX extends Record {
 
+  public static Builder builder() {
+    return new AutoValue_MX.Builder();
+  }
+
+  public static JsonAdapter<MX> jsonAdapter(Moshi moshi) {
+    return new AutoValue_MX.MoshiJsonAdapter(moshi);
+  }
+
   @Json(name = "mail_exchanger")
   public abstract String mailExchanger();
 
   public abstract String name();
 
   public abstract int preference();
-
-  public static Builder builder() {
-    return new AutoValue_MX.Builder();
-  }
 
   @AutoValue.Builder
   public abstract static class Builder extends RecBuilder<Builder> {
@@ -35,9 +39,5 @@ public abstract class MX extends Record {
     public abstract Builder preference(int preference);
 
     public abstract MX build();
-  }
-
-  public static JsonAdapter<MX> jsonAdapter(Moshi moshi) {
-    return new AutoValue_MX.MoshiJsonAdapter(moshi);
   }
 }

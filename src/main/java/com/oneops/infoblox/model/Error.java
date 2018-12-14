@@ -16,6 +16,28 @@ import javax.annotation.Nullable;
 public abstract class Error {
 
   /**
+   * Creates new error object
+   *
+   * @param error error type
+   * @param code error code
+   * @param text explanation
+   * @param trace debug trace
+   * @return {@link Error}
+   */
+  public static Error create(String error, String code, String text, @Nullable String trace) {
+    return new AutoValue_Error(error, code, text, trace);
+  }
+
+  public static Error create(String error, int code) {
+    return create(error, String.valueOf(code), "", "");
+  }
+
+  /** Json adapter for {@link Error} type, used by Moshi for JSON [de]serialization. */
+  public static JsonAdapter<Error> jsonAdapter(Moshi moshi) {
+    return new AutoValue_Error.MoshiJsonAdapter(moshi);
+  }
+
+  /**
    * Error type (followed by an explanation after :)
    *
    * @return error type
@@ -52,27 +74,5 @@ public abstract class Error {
    */
   public InfobloxException cause() {
     return new InfobloxException(this);
-  }
-
-  /**
-   * Creates new error object
-   *
-   * @param error error type
-   * @param code error code
-   * @param text explanation
-   * @param trace debug trace
-   * @return {@link Error}
-   */
-  public static Error create(String error, String code, String text, @Nullable String trace) {
-    return new AutoValue_Error(error, code, text, trace);
-  }
-
-  public static Error create(String error, int code) {
-    return create(error, String.valueOf(code), "", "");
-  }
-
-  /** Json adapter for {@link Error} type, used by Moshi for JSON [de]serialization. */
-  public static JsonAdapter<Error> jsonAdapter(Moshi moshi) {
-    return new AutoValue_Error.MoshiJsonAdapter(moshi);
   }
 }

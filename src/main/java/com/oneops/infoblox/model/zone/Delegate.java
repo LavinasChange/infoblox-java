@@ -12,10 +12,6 @@ import com.squareup.moshi.Moshi;
 @AutoValue
 public abstract class Delegate {
 
-  public abstract String address();
-
-  public abstract String name();
-
   public static Delegate of(String address, String name) {
     return builder().address(address).name(name).build();
   }
@@ -23,6 +19,14 @@ public abstract class Delegate {
   public static Builder builder() {
     return new AutoValue_Delegate.Builder();
   }
+
+  public static JsonAdapter<Delegate> jsonAdapter(Moshi moshi) {
+    return new AutoValue_Delegate.MoshiJsonAdapter(moshi);
+  }
+
+  public abstract String address();
+
+  public abstract String name();
 
   @AutoValue.Builder
   public abstract static class Builder {
@@ -32,9 +36,5 @@ public abstract class Delegate {
     public abstract Builder name(String name);
 
     public abstract Delegate build();
-  }
-
-  public static JsonAdapter<Delegate> jsonAdapter(Moshi moshi) {
-    return new AutoValue_Delegate.MoshiJsonAdapter(moshi);
   }
 }

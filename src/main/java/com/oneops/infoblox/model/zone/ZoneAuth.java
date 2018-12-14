@@ -13,11 +13,15 @@ import com.squareup.moshi.Moshi;
 @AutoValue
 public abstract class ZoneAuth extends Record {
 
-  public abstract String fqdn();
-
   public static Builder builder() {
     return new AutoValue_ZoneAuth.Builder();
   }
+
+  public static JsonAdapter<ZoneAuth> jsonAdapter(Moshi moshi) {
+    return new AutoValue_ZoneAuth.MoshiJsonAdapter(moshi);
+  }
+
+  public abstract String fqdn();
 
   @AutoValue.Builder
   public abstract static class Builder extends RecBuilder<Builder> {
@@ -25,9 +29,5 @@ public abstract class ZoneAuth extends Record {
     public abstract Builder fqdn(String fqdn);
 
     public abstract ZoneAuth build();
-  }
-
-  public static JsonAdapter<ZoneAuth> jsonAdapter(Moshi moshi) {
-    return new AutoValue_ZoneAuth.MoshiJsonAdapter(moshi);
   }
 }

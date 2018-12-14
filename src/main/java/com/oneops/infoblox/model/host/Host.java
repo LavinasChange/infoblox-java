@@ -22,6 +22,14 @@ import javax.annotation.Nullable;
 @AutoValue
 public abstract class Host extends Record {
 
+  public static Builder builder() {
+    return new AutoValue_Host.Builder();
+  }
+
+  public static JsonAdapter<Host> jsonAdapter(Moshi moshi) {
+    return new AutoValue_Host.MoshiJsonAdapter(moshi);
+  }
+
   public abstract String name();
 
   /** <b>Do not mutate</b> the returned object. */
@@ -31,10 +39,6 @@ public abstract class Host extends Record {
   /** <b>Do not mutate</b> the returned object. */
   @Nullable
   public abstract List<String> aliases();
-
-  public static Builder builder() {
-    return new AutoValue_Host.Builder();
-  }
 
   @AutoValue.Builder
   public abstract static class Builder extends RecBuilder<Builder> {
@@ -46,9 +50,5 @@ public abstract class Host extends Record {
     public abstract Builder aliases(List<String> aliases);
 
     public abstract Host build();
-  }
-
-  public static JsonAdapter<Host> jsonAdapter(Moshi moshi) {
-    return new AutoValue_Host.MoshiJsonAdapter(moshi);
   }
 }

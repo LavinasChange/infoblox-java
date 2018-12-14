@@ -13,13 +13,17 @@ import com.squareup.moshi.Moshi;
 @AutoValue
 public abstract class NS extends Record {
 
-  public abstract String name();
-
-  public abstract String nameserver();
-
   public static Builder builder() {
     return new AutoValue_NS.Builder();
   }
+
+  public static JsonAdapter<NS> jsonAdapter(Moshi moshi) {
+    return new AutoValue_NS.MoshiJsonAdapter(moshi);
+  }
+
+  public abstract String name();
+
+  public abstract String nameserver();
 
   @AutoValue.Builder
   public abstract static class Builder extends RecBuilder<Builder> {
@@ -29,9 +33,5 @@ public abstract class NS extends Record {
     public abstract Builder nameserver(String nameserver);
 
     public abstract NS build();
-  }
-
-  public static JsonAdapter<NS> jsonAdapter(Moshi moshi) {
-    return new AutoValue_NS.MoshiJsonAdapter(moshi);
   }
 }

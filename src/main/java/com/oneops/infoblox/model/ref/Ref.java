@@ -23,8 +23,6 @@ import java.util.List;
 @AutoValue
 public abstract class Ref {
 
-  public abstract String value();
-
   /**
    * Creates a new Ref object from the given value.
    *
@@ -34,6 +32,13 @@ public abstract class Ref {
   public static Ref of(String value) {
     return new AutoValue_Ref(value);
   }
+
+  /** Json adapter for {@link Error} type, used by Moshi for JSON [de]serialization. */
+  public static JsonAdapter<Ref> jsonAdapter(Moshi moshi) {
+    return new AutoValue_Ref.MoshiJsonAdapter(moshi);
+  }
+
+  public abstract String value();
 
   /**
    * Returns the WAPI type from ref object.
@@ -91,10 +96,5 @@ public abstract class Ref {
     } catch (UnsupportedEncodingException e) {
       return false;
     }
-  }
-
-  /** Json adapter for {@link Error} type, used by Moshi for JSON [de]serialization. */
-  public static JsonAdapter<Ref> jsonAdapter(Moshi moshi) {
-    return new AutoValue_Ref.MoshiJsonAdapter(moshi);
   }
 }

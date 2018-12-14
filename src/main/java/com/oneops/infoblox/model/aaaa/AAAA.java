@@ -14,14 +14,18 @@ import com.squareup.moshi.Moshi;
 @AutoValue
 public abstract class AAAA extends Record {
 
+  public static Builder builder() {
+    return new AutoValue_AAAA.Builder();
+  }
+
+  public static JsonAdapter<AAAA> jsonAdapter(Moshi moshi) {
+    return new AutoValue_AAAA.MoshiJsonAdapter(moshi);
+  }
+
   @Json(name = "ipv6addr")
   public abstract String ipv6Addr();
 
   public abstract String name();
-
-  public static Builder builder() {
-    return new AutoValue_AAAA.Builder();
-  }
 
   @AutoValue.Builder
   public abstract static class Builder extends RecBuilder<Builder> {
@@ -31,9 +35,5 @@ public abstract class AAAA extends Record {
     public abstract Builder name(String name);
 
     public abstract AAAA build();
-  }
-
-  public static JsonAdapter<AAAA> jsonAdapter(Moshi moshi) {
-    return new AutoValue_AAAA.MoshiJsonAdapter(moshi);
   }
 }

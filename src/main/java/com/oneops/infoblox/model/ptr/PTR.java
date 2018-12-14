@@ -15,33 +15,8 @@ import javax.annotation.Nullable;
 @AutoValue
 public abstract class PTR extends Record {
 
-  @Nullable
-  public abstract String ipv4addr();
-
-  @Nullable
-  public abstract String ipv6addr();
-
-  public abstract String name();
-
-  /** PTR Domain name */
-  public abstract String ptrdname();
-
   public static Builder builder() {
     return new AutoValue_PTR.Builder();
-  }
-
-  @AutoValue.Builder
-  public abstract static class Builder extends RecBuilder<Builder> {
-
-    public abstract Builder ipv4addr(String ipv4addr);
-
-    public abstract Builder ipv6addr(String ipv6addr);
-
-    public abstract Builder name(String name);
-
-    public abstract Builder ptrdname(String ptrdname);
-
-    public abstract PTR build();
   }
 
   public static JsonAdapter<PTR> jsonAdapter(Moshi moshi) {
@@ -83,5 +58,30 @@ public abstract class PTR extends Record {
     return addr.length == 4
         ? String.format("%s.in-addr.arpa", sb.toString())
         : String.format("%s.ip6.arpa", sb.toString());
+  }
+
+  @Nullable
+  public abstract String ipv4addr();
+
+  @Nullable
+  public abstract String ipv6addr();
+
+  public abstract String name();
+
+  /** PTR Domain name */
+  public abstract String ptrdname();
+
+  @AutoValue.Builder
+  public abstract static class Builder extends RecBuilder<Builder> {
+
+    public abstract Builder ipv4addr(String ipv4addr);
+
+    public abstract Builder ipv6addr(String ipv6addr);
+
+    public abstract Builder name(String name);
+
+    public abstract Builder ptrdname(String ptrdname);
+
+    public abstract PTR build();
   }
 }

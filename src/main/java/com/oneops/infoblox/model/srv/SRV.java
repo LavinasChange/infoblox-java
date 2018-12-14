@@ -13,6 +13,14 @@ import com.squareup.moshi.Moshi;
 @AutoValue
 public abstract class SRV extends Record {
 
+  public static Builder builder() {
+    return new AutoValue_SRV.Builder();
+  }
+
+  public static JsonAdapter<SRV> jsonAdapter(Moshi moshi) {
+    return new AutoValue_SRV.MoshiJsonAdapter(moshi);
+  }
+
   public abstract String name();
 
   public abstract int port();
@@ -22,10 +30,6 @@ public abstract class SRV extends Record {
   public abstract int target();
 
   public abstract int weight();
-
-  public static Builder builder() {
-    return new AutoValue_SRV.Builder();
-  }
 
   @AutoValue.Builder
   public abstract static class Builder extends RecBuilder<Builder> {
@@ -41,9 +45,5 @@ public abstract class SRV extends Record {
     public abstract Builder weight(int weight);
 
     public abstract SRV build();
-  }
-
-  public static JsonAdapter<SRV> jsonAdapter(Moshi moshi) {
-    return new AutoValue_SRV.MoshiJsonAdapter(moshi);
   }
 }

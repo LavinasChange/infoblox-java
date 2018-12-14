@@ -13,13 +13,17 @@ import com.squareup.moshi.Moshi;
 @AutoValue
 public abstract class TXT extends Record {
 
-  public abstract String name();
-
-  public abstract String text();
-
   public static Builder builder() {
     return new AutoValue_TXT.Builder();
   }
+
+  public static JsonAdapter<TXT> jsonAdapter(Moshi moshi) {
+    return new AutoValue_TXT.MoshiJsonAdapter(moshi);
+  }
+
+  public abstract String name();
+
+  public abstract String text();
 
   @AutoValue.Builder
   public abstract static class Builder extends RecBuilder<Builder> {
@@ -29,9 +33,5 @@ public abstract class TXT extends Record {
     public abstract Builder text(String text);
 
     public abstract TXT build();
-  }
-
-  public static JsonAdapter<TXT> jsonAdapter(Moshi moshi) {
-    return new AutoValue_TXT.MoshiJsonAdapter(moshi);
   }
 }
