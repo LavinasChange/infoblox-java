@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ## [Unreleased]
 ### Changed
 
+## [1.3.5] - 2018-12-20
+### Fixed
+- Fixed connection failure due to `unexpected end of stream`.
+
 ## [1.3.4] - 2018-12-14
 ### Fixed
 - Fixed an [issue](https://git.io/fpbEp) caused due to retrofit upgrade.
@@ -86,8 +90,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### Added
 - Infoblox java api initial release.
 
-[Unreleased]: https://gecgithub01.walmart.com/oneops/infoblox-java/compare/infoblox-java-1.3.4...HEAD
-[1.3.3]: https://gecgithub01.walmart.com/oneops/infoblox-java/compare/infoblox-java-1.3.3...infoblox-java-1.3.4
+[Unreleased]: https://gecgithub01.walmart.com/oneops/infoblox-java/compare/infoblox-java-1.3.5...HEAD
+[1.3.5]: https://gecgithub01.walmart.com/oneops/infoblox-java/compare/infoblox-java-1.3.4...infoblox-java-1.3.5
+[1.3.4]: https://gecgithub01.walmart.com/oneops/infoblox-java/compare/infoblox-java-1.3.3...infoblox-java-1.3.4
 [1.3.3]: https://gecgithub01.walmart.com/oneops/infoblox-java/compare/infoblox-java-1.3.2...infoblox-java-1.3.3
 [1.3.2]: https://gecgithub01.walmart.com/oneops/infoblox-java/compare/infoblox-java-1.3.1...infoblox-java-1.3.2
 [1.3.1]: https://gecgithub01.walmart.com/oneops/infoblox-java/compare/infoblox-java-1.3.0...infoblox-java-1.3.1

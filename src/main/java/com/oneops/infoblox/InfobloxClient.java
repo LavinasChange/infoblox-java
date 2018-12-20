@@ -182,7 +182,7 @@ public abstract class InfobloxClient {
             .sslSocketFactory(socketFactory, (X509TrustManager) trustManagers[0])
             .connectionSpecs(singletonList(ConnectionSpec.MODERN_TLS))
             .followSslRedirects(false)
-            .retryOnConnectionFailure(false)
+            .retryOnConnectionFailure(true)
             .connectTimeout(timeout(), SECONDS)
             .readTimeout(timeout(), SECONDS)
             .writeTimeout(timeout(), SECONDS)
