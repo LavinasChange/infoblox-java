@@ -4,7 +4,7 @@
 
   <groupId>com.oneops</groupId>
   <artifactId>infoblox-java</artifactId>
-  <version>1.3.5-SNAPSHOT</version>
+  <version>1.3.5</version>
   <packaging>jar</packaging>
 
   <name>infoblox-java</name>
@@ -67,7 +67,7 @@
     <developerConnection>scm:git:https://gecgithub01.walmart.com/oneops/infoblox-java.git
     </developerConnection>
     <url>https://gecgithub01.walmart.com/oneops/infoblox-java</url>
-    <tag>HEAD</tag>
+    <tag>infoblox-java-1.3.5</tag>
   </scm>
 
   <issueManagement>
